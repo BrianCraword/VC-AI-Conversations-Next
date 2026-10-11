@@ -404,7 +404,11 @@ export default apiInitializer((api) => {
     document.getElementById(PANEL_ID)?.remove();
     document.getElementById(TOGGLE_ID)?.remove();
     document.getElementById(BACKDROP_ID)?.remove();
-    document.body.classList.remove(ROOT_CLASS, OPEN_CLASS);
+    // toggle(name, false) is a no-op when the class is absent. remove()
+    // rewrites the class attribute even then, which fires bodyObserver
+    // below and re-runs mount() every frame, forever.
+    document.body.classList.toggle(ROOT_CLASS, false);
+    document.body.classList.toggle(OPEN_CLASS, false);
     document.body.style.removeProperty("--vcai-memory-width");
   }
 
@@ -414,7 +418,9 @@ export default apiInitializer((api) => {
       return;
     }
 
-    document.body.classList.add(ROOT_CLASS);
+    // Same reason as removeInjected: add() would rewrite the attribute
+    // even when the class is already there.
+    document.body.classList.toggle(ROOT_CLASS, true);
     document.body.style.setProperty(
       "--vcai-memory-width",
       `${Number(settings.vcai_memory_width) || 400}px`
