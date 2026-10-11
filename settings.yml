@@ -1,0 +1,198 @@
+# VC AI Conversations Next — settings
+# One switch per module. A module that is off mounts nothing and adds no body
+# class, so turning one off isolates it completely without touching the rest.
+
+vcai_enabled:
+  type: bool
+  default: true
+  client: true
+
+# ── Workspace (landing page + active conversation) ──────────────────────
+
+vcai_workspace_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_workspace_greeting_phrases:
+  type: list
+  list_type: simple
+  default: "Ready to dive deeper, {name}?|Welcome back, {name}.|What shall we discover today?|What would you like to open in the Word, {name}?"
+  client: true
+
+vcai_workspace_greeting_image_url:
+  type: string
+  default: "/custom-images/Fire.svg"
+  client: true
+
+vcai_workspace_subtitle:
+  type: string
+  default: "Ask anything of Scripture. Every answer arrives with its passages, its context, and its reasoning laid open."
+  client: true
+
+vcai_workspace_status_chip_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_workspace_status_chip_label:
+  type: string
+  default: "Session ready"
+  client: true
+
+vcai_workspace_starters_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_workspace_starter_count:
+  type: integer
+  default: 6
+  min: 0
+  max: 8
+  client: true
+
+vcai_workspace_starter_prompts:
+  type: list
+  list_type: simple
+  default: "Open a passage::Help me study a passage in its immediate context, explain its key words and argument, and show its faithful application.|Trace a doctrine::Help me trace a doctrine through its clearest biblical texts and distinguish what Scripture states from later inference.|Test a teaching::Help me test a teaching against the full counsel and context of Scripture.|Explore context::Help me understand the historical, literary, and canonical context of a passage.|Apply the text::Help me move from the meaning of a passage to faithful personal application without skipping interpretation.|Surprise me::Suggest a worthwhile biblical question or passage to explore deeply."
+  client: true
+
+vcai_workspace_dock_agent_selector:
+  type: bool
+  default: true
+  client: true
+
+vcai_workspace_submit_label_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_workspace_ambient_field_enabled:
+  type: bool
+  default: true
+  client: true
+
+# ── History (conversation rail / drawer) ────────────────────────────────
+
+vcai_history_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_width:
+  type: integer
+  default: 380
+  min: 320
+  max: 520
+  client: true
+
+vcai_history_persistent_min_width:
+  type: integer
+  default: 1100
+  min: 900
+  max: 1800
+  client: true
+
+vcai_history_filter_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_row_meta_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_pinned_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_keyboard_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_undo_window_seconds:
+  type: integer
+  default: 8
+  min: 0
+  max: 30
+  client: true
+
+vcai_history_mobile_hide_chrome_on_scroll:
+  type: bool
+  default: true
+  client: true
+
+vcai_history_mobile_hide_chrome_selectors:
+  type: string
+  default: ""
+  client: true
+
+vcai_history_delete_allowed_groups:
+  type: list
+  list_type: compact
+  default: "everyone"
+  client: true
+
+vcai_history_rename_allowed_groups:
+  type: list
+  list_type: compact
+  default: "everyone"
+  client: true
+
+# ── Memory (persistent-memory panel) ────────────────────────────────────
+
+vcai_memory_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_memory_width:
+  type: integer
+  default: 400
+  min: 340
+  max: 560
+  client: true
+
+vcai_memory_default_open:
+  type: bool
+  default: false
+  client: true
+
+vcai_memory_confirm_delete:
+  type: bool
+  default: true
+  client: true
+
+# ── Header controls (History / Memories icons in the site header) ───────
+
+vcai_header_controls_enabled:
+  type: bool
+  default: true
+  client: true
+
+# ── Response status (waiting indicator while the AI replies) ────────────
+
+vcai_response_status_enabled:
+  type: bool
+  default: true
+  client: true
+
+vcai_response_status_waiting_line:
+  type: string
+  default: "Thinking this through"
+  client: true
+
+vcai_response_status_tool_labels:
+  type: list
+  list_type: simple
+  default: "Search Google::Searching the web|Search::Searching the community|Read topic::Reading the discussion|Browse Web::Reading the page|Search uploaded documents::Consulting the sources|Researching::Researching|Preparing research::Preparing the research|Search Meta Discourse::Searching Meta Discourse|Summarize::Summarizing|List categories::Reviewing categories|List tags::Reviewing tags|Look up site setting context::Checking site settings|Look up database schema::Reading the schema"
+  client: true
+
+vcai_response_status_hide_streaming_trailing_dot:
+  type: bool
+  default: false
+  client: true

@@ -1,0 +1,38 @@
+/* VC AI Conversations Next — header controls module
+   Replaces the floating History / Memories pill. Both controls are native
+   header icons: they inherit core's size, spacing, and hover from
+   `.d-header-icons .btn-flat.icon`, so the only styling here is the open
+   state and retiring the legacy edge carets while this module is active. */
+
+body.vcai-header-controls {
+  --vcai-hc-accent: var(--canvas-accent, var(--plaza-accent, var(--tertiary)));
+  --vcai-hc-accent-strong: var(--canvas-accent-dark, var(--plaza-accent-dark, var(--tertiary-hover)));
+  --vcai-hc-accent-soft: var(--canvas-accent-light, var(--plaza-accent-light, var(--tertiary-very-low)));
+}
+
+/* Open state: a quiet tint, same shape core uses for an active header icon. */
+.vcai-header-control--open .vcai-header-control__button,
+.vcai-header-control--open .vcai-header-control__button:hover {
+  background: color-mix(in srgb, var(--vcai-hc-accent-soft) 85%, transparent);
+  color: var(--vcai-hc-accent-strong);
+}
+
+.vcai-header-control--open .vcai-header-control__button .d-icon {
+  color: var(--vcai-hc-accent-strong);
+}
+
+/* The history and memory modules still render their own edge carets for
+   installs that run without this module. While this module is mounted the
+   header owns both controls, so the carets stand down. */
+body.vcai-header-controls #vcai-history-toggle,
+body.vcai-header-controls #vcai-memory-toggle {
+  display: none !important;
+}
+
+/* A native History close removes its menu asynchronously; the legacy custom
+   backdrop must not keep a touch-blocking strip alive during that teardown. */
+body.vcai-header-controls:not(.vcai-history--drawer-open) #vcai-history-backdrop {
+  display: none !important;
+  pointer-events: none !important;
+  backdrop-filter: none !important;
+}

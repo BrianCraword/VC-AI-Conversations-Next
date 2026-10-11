@@ -1,0 +1,1063 @@
+/* VC AI Conversations Next — history module (lineage: VC AI History Next 1.3.0) */
+
+body.vcai-history {
+  --vcai-history-width: 380px;
+  --vcai-history-accent: var(--canvas-accent, var(--plaza-accent, var(--tertiary)));
+  --vcai-history-accent-strong: var(--canvas-accent-dark, var(--plaza-accent-dark, var(--tertiary)));
+  --vcai-history-accent-soft: var(--canvas-accent-light, var(--plaza-accent-light, var(--tertiary-very-low)));
+  --vcai-history-text: var(--canvas-text, var(--plaza-text, var(--primary)));
+  --vcai-history-muted: var(--canvas-text-soft, var(--plaza-text-soft, var(--primary-medium)));
+  --vcai-history-border: var(--canvas-card-border, var(--plaza-card-border, var(--primary-low)));
+  --vcai-history-surface: var(--secondary);
+  --vcai-history-header-height: var(--header-offset, 4em);
+
+  --vcai-history-mono: var(--vc-font-mono, ui-monospace, "SFMono-Regular", "JetBrains Mono", "IBM Plex Mono", Menlo, monospace);
+  --vcai-history-ink: var(--canvas-text, #3d3358);
+  --vcai-history-faint: color-mix(in srgb, var(--vcai-history-accent-soft) 40%, var(--vcai-history-surface));
+  --vcai-history-hairline: color-mix(in srgb, var(--vcai-history-border) 80%, transparent);
+  --vcai-history-danger: var(--danger, #be123c);
+  --vcai-history-danger-soft: var(--danger-low, #fff1f2);
+  --vcai-history-radius-row: 12px;
+  --vcai-history-radius-ctl: 9px;
+  --vcai-history-row-gutter: 2.75rem;
+}
+
+/* ---------------------------------------------------------------- shell -- */
+
+body.vcai-history .sidebar-sections.ai-conversations-panel {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0 0.625rem 1.5rem;
+}
+
+/* A little warmth at the top of the rail so it does not read as a plain
+   white column. Fades out well before the first group header. */
+body.vcai-history nav#d-sidebar,
+body.vcai-history .sidebar-container {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--vcai-history-accent-soft) 34%, var(--vcai-history-surface)) 0,
+      var(--vcai-history-surface) 260px
+    ),
+    var(--vcai-history-surface);
+}
+
+/* ------------------------------------------------------- new question -- */
+
+body.vcai-history .ai-new-question-button__wrapper {
+  margin: 1.125rem 1rem 0.25rem;
+}
+
+body.vcai-history .ai-new-question-button,
+body.vcai-history .ai-conversations-panel .sidebar-new-topic-button,
+body.vcai-history .ai-conversations-panel .btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 2.875rem;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  /* Matches the composer's Ask button. */
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--vcai-history-accent) 82%, #fff) 0%,
+    var(--vcai-history-accent) 52%,
+    var(--vcai-history-accent-strong) 100%
+  );
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--vcai-history-accent) 82%, #fff) 0%,
+    var(--vcai-history-accent) 52%,
+    var(--vcai-history-accent-strong) 100%
+  );
+  color: #fff;
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--vcai-history-accent-strong) 95%, transparent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: filter 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+body.vcai-history .ai-new-question-button:hover,
+body.vcai-history .ai-new-question-button:focus-visible {
+  color: #fff;
+  filter: saturate(1.08) brightness(1.05);
+  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--vcai-history-accent-strong) 95%, transparent);
+}
+
+body.vcai-history .ai-new-question-button:active {
+  transform: translateY(1px);
+}
+
+body.vcai-history .ai-new-question-button .d-icon,
+body.vcai-history .ai-new-question-button svg {
+  color: #fff;
+}
+
+.vcai-history-kbd {
+  margin-left: auto;
+  padding: 0.2rem 0.45rem;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--vcai-history-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------- search --
+   The icon is a flex sibling of the input, never an overlay. 1.2.0 relied on
+   the input carrying enough padding-left to clear an absolutely positioned
+   icon; any competing padding rule put the magnifier on top of the text. */
+
+body.vcai-history .vcai-history-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  margin: 0.75rem 0.35rem 0.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-history-border) 70%, var(--vcai-history-accent) 14%);
+  border-radius: var(--vcai-history-radius-row);
+  background: var(--vcai-history-faint);
+  transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+body.vcai-history .vcai-history-search:focus-within {
+  border-color: var(--vcai-history-accent);
+  background: var(--vcai-history-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vcai-history-accent) 18%, transparent);
+}
+
+body.vcai-history .vcai-history-search__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--vcai-history-muted);
+  pointer-events: none;
+}
+
+body.vcai-history .vcai-history-search__icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+body.vcai-history .vcai-history-search__input {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--vcai-history-text);
+  font: inherit;
+  font-size: 0.845rem;
+}
+
+body.vcai-history .vcai-history-search__input:focus {
+  border: 0;
+  box-shadow: none;
+}
+
+body.vcai-history .vcai-history-search__input::placeholder {
+  color: var(--vcai-history-muted);
+}
+
+body.vcai-history .vcai-history-search__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+body.vcai-history .vcai-history-search__clear {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--vcai-history-muted) 18%, transparent);
+  color: var(--vcai-history-text);
+  cursor: pointer;
+}
+
+body.vcai-history .vcai-history-search__clear svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* --------------------------------------------------------------- chips -- */
+
+.vcai-history-scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0 0.35rem 0.5rem;
+}
+
+.vcai-history-scope {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--vcai-history-muted);
+  font-family: var(--vcai-history-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.vcai-history-scope:hover {
+  border-color: color-mix(in srgb, var(--vcai-history-accent) 30%, transparent);
+  color: var(--vcai-history-accent-strong);
+}
+
+.vcai-history-scope[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--vcai-history-accent) 40%, transparent);
+  background: var(--vcai-history-accent-soft);
+  color: var(--vcai-history-accent-strong);
+}
+
+/* ------------------------------------------------------ group headers -- */
+
+body.vcai-history .ai-conversations-panel .sidebar-section-header-wrapper.sidebar-row {
+  padding: 0;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section {
+  padding: 0;
+  border-bottom: 0;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-header {
+  gap: 0.5rem;
+  margin: 1.35rem 0 0.4rem;
+  padding: 0 0.4rem;
+  color: var(--vcai-history-muted);
+  font-family: var(--vcai-history-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-header:first-child {
+  margin-top: 0.5rem;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-header-text {
+  flex: 0 0 auto;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-header-caret {
+  width: 1rem;
+  color: color-mix(in srgb, var(--vcai-history-muted) 70%, transparent);
+}
+
+.vcai-history-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 0.75rem;
+  background: linear-gradient(90deg, var(--vcai-history-hairline), transparent);
+}
+
+.vcai-history-count {
+  flex: 0 0 auto;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vcai-history-accent-soft) 55%, transparent);
+  color: color-mix(in srgb, var(--vcai-history-accent-strong) 70%, var(--vcai-history-muted));
+  font-family: var(--vcai-history-mono);
+  font-size: 0.595rem;
+  letter-spacing: 0.04em;
+}
+
+.vcai-history-count:empty {
+  display: none;
+}
+
+/* ----------------------------------------------------------------- row -- */
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  /* Core fixes the row at var(--d-sidebar-row-height); a min-height alone
+     lost to it, so the meta line ("Open now · 12 MSG") rendered below the
+     48px box and over the next row. The row must be allowed to grow. */
+  height: auto;
+  min-height: 3rem;
+  margin: 0.25rem 0;
+  padding: 0.7rem var(--vcai-history-row-gutter) 0.7rem 0.875rem;
+  border-radius: var(--vcai-history-radius-row);
+  color: var(--vcai-history-text);
+  text-decoration: none;
+  transition: background 140ms ease, box-shadow 140ms ease, opacity 180ms ease,
+    transform 180ms ease;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row:hover,
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row:focus-visible,
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row:focus-within {
+  background: color-mix(in srgb, var(--vcai-history-accent-soft) 45%, var(--vcai-history-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vcai-history-accent) 16%, transparent);
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link-prefix {
+  display: none;
+}
+
+/* Discourse AI now ships its own hover ⋮ on each row (rename/delete). This
+   module's overflow control covers the same actions plus pin and undo, so
+   the core one is retired to avoid two menus on one row. */
+body.vcai-history .ai-conversations-panel .sidebar-section-link-hover {
+  display: none !important;
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link-content,
+body.vcai-history .ai-conversations-panel .sidebar-section-link-content-text {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+  color: inherit;
+  font-size: 0.87rem;
+  line-height: 1.36;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: break-word;
+  -webkit-line-clamp: unset;
+}
+
+.vcai-history-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: color-mix(in srgb, var(--vcai-history-muted) 90%, var(--vcai-history-text));
+  font-family: var(--vcai-history-mono);
+  font-size: 0.615rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.vcai-history-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success, #6ec48a);
+}
+
+/* --------------------------------------------------------- active row --
+   Solid tint. 1.2.0 used a gradient that faded to near-surface on the right,
+   which read as the highlight failing to cover the row. */
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row.vcai-history-row--active,
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row.vcai-history-row--active:hover {
+  background: var(--vcai-history-accent-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vcai-history-accent) 38%, transparent),
+    0 8px 20px -14px color-mix(in srgb, var(--vcai-history-accent-strong) 90%, transparent);
+}
+
+body.vcai-history .ai-conversations-panel .vcai-history-row--active .sidebar-section-link-content-text {
+  color: var(--vcai-history-accent-strong);
+  font-weight: 600;
+}
+
+body.vcai-history .ai-conversations-panel .vcai-history-row--active .vcai-history-meta {
+  color: var(--vcai-history-accent-strong);
+}
+
+body.vcai-history .ai-conversations-panel .vcai-history-row--active::before {
+  content: "";
+  position: absolute;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  left: 0.3rem;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--vcai-history-accent),
+    var(--vcai-history-accent-strong)
+  );
+}
+
+body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row.vcai-history-row--keyed {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--vcai-history-accent) 55%, transparent);
+}
+
+/* ------------------------------------------------------ overflow control -- */
+
+.vcai-history-action {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  padding: 0;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: var(--vcai-history-radius-ctl);
+  background: transparent;
+  color: color-mix(in srgb, var(--vcai-history-muted) 85%, transparent);
+  font: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.vcai-history-action svg {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.sidebar-row:hover > .vcai-history-action,
+.vcai-history-action:hover,
+.vcai-history-action:focus-visible {
+  background: var(--vcai-history-surface);
+  color: var(--vcai-history-accent-strong);
+  box-shadow: 0 1px 3px rgba(31, 24, 48, 0.16);
+  outline: none;
+}
+
+.vcai-history-action[aria-expanded="true"] {
+  background: var(--vcai-history-accent-strong);
+  color: #fff;
+  box-shadow: none;
+}
+
+.vcai-history-row--active > .vcai-history-action {
+  background: var(--vcai-history-surface);
+  color: var(--vcai-history-accent-strong);
+  box-shadow: 0 1px 3px rgba(31, 24, 48, 0.12);
+}
+
+/* ----------------------------------------------------------- pin badge -- */
+
+.vcai-history-pin-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 2.4rem;
+  display: inline-flex;
+  color: var(--vcai-history-accent);
+  pointer-events: none;
+}
+
+.vcai-history-pin-badge svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* --------------------------------------------------------- pin shelf -- */
+
+.vcai-history-shelf {
+  margin: 0.25rem 0 0.75rem;
+}
+
+.vcai-history-shelf__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.35rem 0 0.4rem;
+  padding: 0 0.4rem;
+  color: var(--vcai-history-accent-strong);
+  font-family: var(--vcai-history-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.vcai-history-shelf__header svg {
+  width: 12px;
+  height: 12px;
+}
+
+.vcai-history-shelf__link {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 3rem;
+  margin: 0.25rem 0;
+  padding: 0.7rem var(--vcai-history-row-gutter) 0.7rem 0.875rem;
+  border-radius: var(--vcai-history-radius-row);
+  background: color-mix(in srgb, var(--vcai-history-accent-soft) 34%, var(--vcai-history-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--vcai-history-accent) 18%, transparent);
+  color: var(--vcai-history-text);
+  font-size: 0.87rem;
+  line-height: 1.36;
+  text-decoration: none;
+  overflow-wrap: break-word;
+}
+
+.vcai-history-shelf__link:hover {
+  background: var(--vcai-history-accent-soft);
+  color: var(--vcai-history-text);
+}
+
+/* -------------------------------------------------------- overflow menu -- */
+
+.vcai-history-menu {
+  position: fixed;
+  z-index: 1090;
+  box-sizing: border-box;
+  width: 196px;
+  padding: 0.375rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-history-border) 90%, transparent);
+  border-radius: 14px;
+  background: var(--vcai-history-surface);
+  box-shadow: 0 18px 40px -18px rgba(31, 24, 48, 0.45);
+}
+
+.vcai-history-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.55rem 0.625rem;
+  border: 0;
+  border-radius: var(--vcai-history-radius-ctl);
+  background: transparent;
+  color: var(--vcai-history-text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vcai-history-menu__item svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: var(--vcai-history-accent-strong);
+}
+
+.vcai-history-menu__item:hover,
+.vcai-history-menu__item:focus-visible {
+  background: color-mix(in srgb, var(--vcai-history-accent-soft) 60%, var(--vcai-history-surface));
+  outline: none;
+}
+
+.vcai-history-menu__item--danger {
+  color: var(--vcai-history-danger);
+}
+
+.vcai-history-menu__item--danger svg {
+  color: var(--vcai-history-danger);
+}
+
+.vcai-history-menu__item--danger:hover,
+.vcai-history-menu__item--danger:focus-visible {
+  background: var(--vcai-history-danger-soft);
+}
+
+.vcai-history-menu__sep {
+  height: 1px;
+  margin: 0.25rem 0.375rem;
+  background: var(--vcai-history-hairline);
+}
+
+.vcai-history-menu__heading {
+  display: none;
+}
+
+.vcai-history-menu-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1085;
+  border: 0;
+  background: transparent;
+}
+
+/* ---------------------------------------------------------- rename -- */
+
+body.vcai-history .ai-conversations-panel .vcai-history-row--renaming {
+  padding-right: 0.375rem;
+  background: var(--vcai-history-surface);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--vcai-history-accent) 45%, transparent),
+    0 6px 18px -8px color-mix(in srgb, var(--vcai-history-accent-strong) 60%, transparent);
+}
+
+.vcai-history-row--renaming .vcai-history-action,
+.vcai-history-row--renaming .vcai-history-pin-badge,
+.vcai-history-row--renaming .vcai-history-meta {
+  display: none;
+}
+
+.vcai-history-rename {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.vcai-history-rename__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-history-border) 70%, var(--vcai-history-accent) 14%);
+  border-radius: var(--vcai-history-radius-ctl);
+  outline: 0;
+  background: var(--vcai-history-faint);
+  color: var(--vcai-history-text);
+  font: inherit;
+  font-size: 0.845rem;
+}
+
+.vcai-history-rename__input:focus {
+  border-color: var(--vcai-history-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vcai-history-accent) 20%, transparent);
+}
+
+.vcai-history-rename__save,
+.vcai-history-rename__cancel {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vcai-history-radius-ctl);
+  background: transparent;
+  cursor: pointer;
+}
+
+.vcai-history-rename__save svg,
+.vcai-history-rename__cancel svg {
+  width: 15px;
+  height: 15px;
+}
+
+.vcai-history-rename__save {
+  background: color-mix(in srgb, var(--success, #2f8a52) 12%, transparent);
+  color: var(--success, #2f8a52);
+}
+
+.vcai-history-rename__cancel {
+  color: var(--vcai-history-muted);
+}
+
+.vcai-history-rename__cancel:hover {
+  background: var(--vcai-history-danger-soft);
+  color: var(--vcai-history-danger);
+}
+
+/* ----------------------------------------------------------- footer -- */
+
+.vcai-history-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  color: color-mix(in srgb, var(--vcai-history-muted) 75%, transparent);
+  font-family: var(--vcai-history-mono);
+  font-size: 0.595rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------ toast -- */
+
+.vcai-history-toast {
+  position: fixed;
+  z-index: 1100;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: min(22rem, calc(100vw - 2.5rem));
+  padding: 0.7rem 0.7rem 0.7rem 1rem;
+  border-radius: 14px;
+  background: var(--vcai-history-ink);
+  color: #fff;
+  box-shadow: 0 20px 44px -20px rgba(31, 24, 48, 0.8);
+  font-size: 0.82rem;
+  animation: vcai-history-toast-in 180ms ease;
+}
+
+.vcai-history-toast__undo {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vcai-history-toast__undo:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes vcai-history-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ------------------------------------------------------------ empty -- */
+
+.vcai-history-empty {
+  padding: 1.5rem 0.875rem;
+  color: var(--vcai-history-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Hiding happens on the list-item wrapper and must beat the row rules above,
+   which are far more specific than a single utility class. */
+body.vcai-history .vcai-history-hidden,
+body.vcai-history .ai-conversations-panel .vcai-history-hidden {
+  display: none !important;
+}
+
+.vcai-history-row--removing {
+  opacity: 0;
+  transform: translateX(-0.75rem);
+}
+
+/* ================================================== shell geometry ===== */
+
+.vcai-history-toggle {
+  position: fixed;
+  z-index: 1045;
+  top: calc(var(--vcai-history-header-height) + 0.75rem);
+  left: max(0.75rem, env(safe-area-inset-left));
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--vcai-history-accent);
+  color: #fff;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--vcai-history-accent) 32%, transparent);
+  cursor: pointer;
+}
+
+.vcai-history-toggle span {
+  display: block;
+  transform: rotate(0deg);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
+  transition: transform 180ms ease;
+}
+
+body.vcai-history--drawer-open .vcai-history-toggle span {
+  transform: rotate(180deg);
+}
+
+.vcai-history-backdrop {
+  position: fixed;
+  z-index: 1035;
+  /* The backdrop starts at the drawer's right edge instead of covering the
+     whole viewport. The drawer lives inside #main-outlet-wrapper, which can
+     form its own stacking context on mobile — a full-width body-level
+     backdrop then paints ABOVE the drawer regardless of the drawer's higher
+     z-index, blurring it and swallowing every tap. */
+  inset: var(--vcai-history-header-height) 0 0
+    min(var(--vcai-history-width), calc(100vw - 3.25rem));
+  display: none;
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: rgba(31, 24, 48, 0.24);
+  backdrop-filter: blur(1px);
+}
+
+body.vcai-history--persistent #main-outlet-wrapper.wrap {
+  display: grid;
+  grid-template-columns: var(--vcai-history-width) minmax(0, 1fr);
+  max-width: none;
+  margin-inline: 0;
+}
+
+body.vcai-history--persistent #main-outlet-wrapper > .sidebar-wrapper {
+  position: sticky;
+  z-index: 12;
+  top: var(--vcai-history-header-height);
+  grid-column: 1;
+  display: flex;
+  width: var(--vcai-history-width);
+  min-width: var(--vcai-history-width);
+  max-width: var(--vcai-history-width);
+  height: calc(100dvh - var(--vcai-history-header-height));
+  overflow: hidden;
+  border-right: 1px solid var(--vcai-history-border);
+  box-sizing: border-box;
+}
+
+body.vcai-history--persistent #main-outlet-wrapper > .sidebar-wrapper .sidebar-container {
+  width: 100%;
+  overflow-y: auto;
+}
+
+body.vcai-history--persistent #main-outlet-wrapper > #main-outlet {
+  grid-column: 2;
+  min-width: 0;
+}
+
+body.vcai-history:not(.vcai-history--persistent) .vcai-history-toggle {
+  display: inline-flex;
+}
+
+body.vcai-history:not(.vcai-history--persistent) #main-outlet-wrapper > .sidebar-wrapper {
+  position: fixed;
+  z-index: 1040;
+  top: var(--vcai-history-header-height);
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: min(var(--vcai-history-width), calc(100vw - 3.25rem));
+  min-width: min(var(--vcai-history-width), calc(100vw - 3.25rem));
+  max-width: min(var(--vcai-history-width), calc(100vw - 3.25rem));
+  height: auto;
+  overflow: hidden;
+  transform: translateX(-105%);
+  border-right: 1px solid var(--vcai-history-border);
+  box-shadow: 18px 0 42px rgba(31, 24, 48, 0.16);
+  visibility: hidden;
+  transition: transform 200ms ease, visibility 0s linear 200ms;
+}
+
+body.vcai-history:not(.vcai-history--persistent) #main-outlet-wrapper > .sidebar-wrapper .sidebar-container {
+  width: 100%;
+  overflow-y: auto;
+}
+
+body.vcai-history--drawer-open:not(.vcai-history--persistent) #main-outlet-wrapper > .sidebar-wrapper {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 200ms ease;
+}
+
+body.vcai-history--drawer-open:not(.vcai-history--persistent):not(.vcai-history--native-mobile) .vcai-history-backdrop {
+  display: block;
+}
+
+body.vcai-history--native-mobile .vcai-history-backdrop {
+  display: none;
+  pointer-events: none;
+  backdrop-filter: none;
+}
+
+/* ============================================ mobile / touch controls === */
+
+body.vcai-history .hamburger-panel .ai-conversations-panel,
+body.vcai-history .menu-panel .ai-conversations-panel {
+  overflow: visible;
+}
+
+body.vcai-history .hamburger-panel .ai-conversations-panel .sidebar-section-link.sidebar-row,
+body.vcai-history .menu-panel .ai-conversations-panel .sidebar-section-link.sidebar-row {
+  overflow: visible;
+}
+
+body.vcai-history--native-mobile .ai-conversations-panel .vcai-history-action,
+body.vcai-history .hamburger-panel .ai-conversations-panel .vcai-history-action,
+body.vcai-history .menu-panel .ai-conversations-panel .vcai-history-action {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto;
+  z-index: 3;
+}
+
+.desktop-view .hamburger-panel .ai-new-question-button {
+  display: none;
+}
+
+/* Chrome that slides away while scrolling the history on phones. */
+.vcai-history-chrome {
+  transform-origin: top center;
+  transition: max-height 240ms ease, opacity 160ms ease, transform 240ms ease,
+    margin 240ms ease;
+}
+
+@media (max-width: 768px) {
+  body.vcai-history--chrome-hidden .vcai-history-chrome {
+    max-height: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    overflow: hidden !important;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  body.vcai-history .vcai-history-backdrop {
+    display: none !important;
+    pointer-events: none;
+    backdrop-filter: none;
+  }
+
+  body.vcai-history {
+    --vcai-history-row-gutter: 3.4rem;
+  }
+
+  body.vcai-history .sidebar-sections.ai-conversations-panel {
+    padding-inline: 0.5rem;
+  }
+
+  body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row {
+    min-height: 3.75rem;
+    margin-block: 0.3rem;
+    padding-block: 0.8rem;
+  }
+
+  body.vcai-history .ai-conversations-panel .sidebar-section-link-content-text {
+    font-size: 0.94rem;
+  }
+
+  .vcai-history-meta {
+    font-size: 0.66rem;
+  }
+
+  .vcai-history-action {
+    right: 0.3rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--vcai-history-accent-soft) 70%, var(--vcai-history-surface));
+    color: var(--vcai-history-accent-strong);
+  }
+
+  .vcai-history-action svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .vcai-history-pin-badge {
+    right: 3.5rem;
+  }
+
+  body.vcai-history .vcai-history-search__input {
+    height: 2.875rem;
+    font-size: 16px; /* prevents iOS zoom-on-focus */
+  }
+
+  body.vcai-history .ai-new-question-button {
+    min-height: 3rem;
+    font-size: 0.95rem;
+  }
+
+  .vcai-history-scope {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.66rem;
+  }
+
+  .vcai-history-menu {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    padding: 0.5rem 0.5rem calc(0.75rem + env(safe-area-inset-bottom));
+    border: 0;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -16px 40px -18px rgba(31, 24, 48, 0.55);
+    animation: vcai-history-sheet-in 180ms ease;
+  }
+
+  .vcai-history-menu__heading {
+    display: block;
+    padding: 0.5rem 0.75rem 0.6rem;
+    color: var(--vcai-history-muted);
+    font-family: var(--vcai-history-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .vcai-history-menu__item {
+    min-height: 3.25rem;
+    padding-inline: 1rem;
+    border-radius: 14px;
+    font-size: 0.95rem;
+  }
+
+  .vcai-history-menu__item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .vcai-history-menu-scrim {
+    background: rgba(31, 24, 48, 0.3);
+  }
+
+  .vcai-history-hint {
+    display: none;
+  }
+
+  .vcai-history-toast {
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+}
+
+@keyframes vcai-history-sheet-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vcai-history-toggle span,
+  .vcai-history-chrome,
+  body.vcai-history #main-outlet-wrapper > .sidebar-wrapper,
+  body.vcai-history .ai-conversations-panel .sidebar-section-link.sidebar-row,
+  .vcai-history-toast,
+  .vcai-history-menu {
+    transition-duration: 0.01ms;
+    animation-duration: 0.01ms;
+  }
+}

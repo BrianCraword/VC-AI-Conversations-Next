@@ -1,0 +1,88 @@
+/* VC AI Conversations Next — response-status module (lineage: VC AI Response Status Next 1.0.1) */
+
+body.has-ai-bot-docked-composer {
+  --vcai-status-accent: var(--canvas-accent, var(--plaza-accent, var(--tertiary)));
+  --vcai-status-soft: var(--canvas-accent-light, var(--plaza-accent-light, var(--tertiary-very-low)));
+  --vcai-status-text: var(--canvas-text-soft, var(--plaza-text-soft, var(--primary-medium)));
+  --vcai-status-border: var(--canvas-lavender-border, var(--plaza-lavender-border, var(--primary-low)));
+}
+
+.vcai-response-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.2rem 0 0.6rem;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid var(--vcai-status-border);
+  border-radius: 999px;
+  background: var(--vcai-status-soft);
+  color: var(--vcai-status-text);
+  font-size: var(--font-down-1);
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+
+.vcai-response-status--leaving {
+  opacity: 0;
+}
+
+.vcai-response-status__ring {
+  flex: 0 0 auto;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    color-mix(in srgb, var(--vcai-status-accent) 35%, transparent) 85deg,
+    var(--vcai-status-accent) 325deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent 59%, #000 61%);
+  mask: radial-gradient(closest-side, transparent 59%, #000 61%);
+}
+
+.vcai-response-status__phrase {
+  padding-block: 0.03em;
+  color: var(--vcai-status-text);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.vcai-response-status__phrase--swapping {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vcai-response-status__ring {
+    animation: vcai-status-spin 1.1s linear infinite;
+  }
+}
+
+@keyframes vcai-status-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vcai-response-status,
+  .vcai-response-status__phrase {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Suppress only the pre-prose dot and only in the AI docked-composer route. */
+html.vcai-response-status-enabled body.has-ai-bot-docked-composer article.streaming .cooked > .progress-dot:only-child,
+html.vcai-response-status-enabled body.has-ai-bot-docked-composer article[id^="post_"].streaming .cooked > .progress-dot:only-child {
+  display: none !important;
+}
+
+html.vcai-response-status-hide-trailing body.has-ai-bot-docked-composer .streamable-content.streaming .cooked p:last-child::after,
+html.vcai-response-status-hide-trailing body.has-ai-bot-docked-composer article.streaming .cooked .progress-dot::after,
+html.vcai-response-status-hide-trailing body.has-ai-bot-docked-composer article[id^="post_"].streaming .cooked .progress-dot::after {
+  content: none !important;
+}
