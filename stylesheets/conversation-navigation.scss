@@ -1,0 +1,28 @@
+.vcai-conversation-navigation {
+  position: sticky;
+  top: var(--header-offset, 4rem);
+  z-index: 990;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding: .4rem;
+  background: var(--secondary);
+  border-bottom: 1px solid var(--primary-low);
+  .btn, summary, a { min-height: 44px; box-sizing: border-box; }
+  summary, a { padding: .65rem; cursor: pointer; }
+  a { display: block; overflow-wrap: anywhere; }
+  summary:focus-visible, a:focus-visible { outline: 2px solid var(--tertiary); outline-offset: 2px; }
+  &__menu { position: static; }
+  &__links {
+    position: absolute;
+    inset-inline-end: .4rem;
+    top: 100%;
+    min-width: min(18rem, 85vw);
+    max-width: 85vw;
+    max-height: 55vh;
+    overflow-y: auto;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    box-shadow: 0 4px 12px #0002;
+  }
+}
