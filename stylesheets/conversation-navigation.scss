@@ -12,6 +12,13 @@
   summary, a { padding: .65rem; cursor: pointer; }
   a { display: block; overflow-wrap: anywhere; }
   summary:focus-visible, a:focus-visible { outline: 2px solid var(--tertiary); outline-offset: 2px; }
+}
+
+@media (min-width: 640px) {
+  body.je-nav-shared .vcai-conversation-navigation { top: calc(var(--header-offset, 53px) + 58px); z-index: 490; }
+}
+
+.vcai-conversation-navigation {
   &__menu { position: static; }
   &__links {
     position: absolute;

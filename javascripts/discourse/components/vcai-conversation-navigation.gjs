@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { on } from "@ember/modifier";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
@@ -17,19 +19,30 @@ export default class VcaiConversationNavigation extends Component {
   @service appEvents;
   @service dialog;
   @service capabilities;
+  @tracked rows = [];
+  @tracked sharedExplore = false;
   @tracked state = routeState();
   @tracked path = "";
-  @tracked rows = [];
   @tracked busy = false;
+  @tracked historyAvailable = false;
 
   constructor() {
     super(...arguments);
     this.sync();
+    this.historyObserver = new MutationObserver(() => {
+      this.historyAvailable = document.body.classList.contains("vcai-history");
+    });
+    this.historyAvailable = document.body.classList.contains("vcai-history");
+    this.historyObserver.observe(document.body, {attributes:true, attributeFilter:["class"]});
     const unsubscribe = onRouteState(() => this.sync());
     this.changed = () => this.sync();
     this.router.on("routeDidChange", this.changed);
+    this.beforeNavigate = event => { if (this.visible && !this.canLeave()) { event.preventDefault(); } };
+    document.addEventListener("je-nav:before-navigate", this.beforeNavigate);
     registerDestructor(this, () => {
       unsubscribe();
+      this.historyObserver.disconnect();
+      document.removeEventListener("je-nav:before-navigate", this.beforeNavigate);
       this.router.off("routeDidChange", this.changed);
     });
   }
@@ -38,6 +51,9 @@ export default class VcaiConversationNavigation extends Component {
     this.path = this.router.currentURL || "";
     this.rows = [];
     this.menuElement?.removeAttribute("open");
+    const detail = { version: 1, surface: this.capabilities.viewport.sm ? "desktop" : "mobile" };
+    document.dispatchEvent(new CustomEvent("je-nav:destinations:request", {detail}));
+    this.sharedExplore = detail.sharedExplore === true;
   }
   get visible() {
     return eligibleNavigation({user: this.currentUser, state: this.state, path: this.path,
@@ -64,9 +80,20 @@ export default class VcaiConversationNavigation extends Component {
       if (fresh) { this.appEvents.trigger("discourse-ai:new-conversation-btn-clicked"); }
       if (this.path.split("?")[0] !== href) { await this.router.transitionTo(href); }
       if (href === HOME) { document.getElementById("ai-bot-conversations-input")?.focus(); }
-      this.menuElement?.removeAttribute("open");
-    } finally { if (!this.isDestroying && !this.isDestroyed) { this.busy = false; } }
+      } finally { if (!this.isDestroying && !this.isDestroyed) { this.busy = false; } }
   }
+  get historyLabel() { return i18n(themePrefix("vcai_header.history")); }
+  @action history() {
+    window.dispatchEvent(new CustomEvent("vcai:history:toggle"));
+  }
+  @action explore(event) {
+    event?.stopPropagation();
+    const request = new CustomEvent("je-nav:explore:open", {cancelable: true});
+    document.dispatchEvent(request);
+    if (!request.defaultPrevented) { this.sharedExplore = false; }
+  }
+  @action ready() { document.body.classList.add("vcai-navigation-ready"); }
+  @action unready() { document.body.classList.remove("vcai-navigation-ready"); }
   @action conversations() { return this.navigate(HOME); }
   @action newConversation() { return this.navigate(HOME, true); }
   @action visit(event) {
@@ -91,13 +118,16 @@ export default class VcaiConversationNavigation extends Component {
   }
   <template>
     {{#if this.visible}}
-      <nav class="vcai-conversation-navigation" aria-label={{this.conversationsLabel}} {{on "keydown" this.keydown}}>
+      <nav class="vcai-conversation-navigation" aria-label={{this.conversationsLabel}} {{on "keydown" this.keydown}} {{didInsert this.ready}} {{willDestroy this.unready}}>
         {{#if this.state.landing}}
           <span class="vcai-conversation-navigation__context">{{this.conversationsLabel}}</span>
         {{else}}
           <DButton @translatedLabel={{this.conversationsLabel}} @action={{this.conversations}} @disabled={{this.busy}} />
         {{/if}}
         <DButton @translatedLabel={{this.newLabel}} @action={{this.newConversation}} @disabled={{this.busy}} />
+        {{#if this.sharedExplore}}
+          <DButton @translatedLabel={{this.menuLabel}} @action={{this.explore}} />
+        {{else}}
         <details class="vcai-conversation-navigation__menu" {{on "toggle" this.menuToggle}}>
           <summary>{{this.menuLabel}}</summary>
           <div class="vcai-conversation-navigation__links">
@@ -116,6 +146,10 @@ export default class VcaiConversationNavigation extends Component {
             {{/each}}
           </div>
         </details>
+        {{/if}}
+        {{#if this.historyAvailable}}
+          <DButton @translatedLabel={{this.historyLabel}} @action={{this.history}} />
+        {{/if}}
       </nav>
     {{/if}}
   </template>

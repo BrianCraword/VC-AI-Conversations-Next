@@ -102,6 +102,6 @@ en:
   vcai_navigation:
     conversations: "Conversations"
     new_conversation: "New conversation"
-    site_menu: "Site menu"
+    site_menu: "Explore"
     feed: "Feed"
     draft_notice: "You have an unfinished message or upload. Finish or save it in the composer before leaving this conversation."
