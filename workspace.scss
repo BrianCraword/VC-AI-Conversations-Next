@@ -1,0 +1,847 @@
+/* VC AI Conversations Next — workspace module (lineage: VC AI Workspace Next 1.2.0) */
+
+body.vcai-workspace {
+  --vcai-accent: var(--canvas-accent, var(--plaza-accent, var(--tertiary)));
+  --vcai-accent-strong: var(--canvas-accent-dark, var(--plaza-accent-dark, var(--tertiary-hover)));
+  --vcai-accent-soft: var(--canvas-accent-light, var(--plaza-accent-light, var(--tertiary-very-low)));
+  --vcai-warm-soft: var(--canvas-peach, var(--plaza-peach, var(--highlight-low)));
+  --vcai-text: var(--canvas-text, var(--plaza-text, var(--primary)));
+  --vcai-text-muted: var(--canvas-text-soft, var(--plaza-text-soft, var(--primary-medium)));
+  --vcai-border: var(--canvas-card-border, var(--plaza-card-border, var(--primary-low)));
+  --vcai-surface: var(--secondary);
+  --vcai-surface-soft: var(--primary-very-low);
+  --vcai-radius-sm: 8px;
+  --vcai-radius-md: 12px;
+  --vcai-radius-lg: 18px;
+  --vcai-radius-xl: 24px;
+  --vcai-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --vcai-shadow-md: 0 12px 36px rgba(34, 23, 58, 0.09);
+  --vcai-shadow-lg: 0 24px 60px rgba(34, 23, 58, 0.14);
+  --vcai-focus: 0 0 0 4px color-mix(in srgb, var(--vcai-accent) 16%, transparent);
+  --vcai-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --vcai-display: var(--vc-display, "Outfit", system-ui, sans-serif);
+  --vcai-composer-width: 51.25rem;
+  --vcai-ember: rgba(224, 113, 43, 0.28);
+  overflow-x: clip;
+}
+
+body.vcai-workspace #main-outlet-wrapper.wrap {
+  max-width: none;
+  margin-inline: 0;
+}
+
+body.vcai-workspace #main-outlet {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Landing — ambient field
+   ========================================================================== */
+
+body.vcai-workspace--landing #main-outlet {
+  width: min(100%, 69.375rem);
+  margin-inline: auto;
+}
+
+body.vcai-workspace--landing .ai-bot-conversations {
+  position: relative;
+  min-height: calc(100dvh - 150px);
+  justify-content: center;
+}
+
+body.vcai-workspace--landing.vcai-ambient .ai-bot-conversations::before,
+body.vcai-workspace--landing.vcai-ambient .ai-bot-conversations::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.vcai-workspace--landing.vcai-ambient .ai-bot-conversations::before {
+  inset: -4rem -50vw;
+  background-image: radial-gradient(color-mix(in srgb, var(--vcai-text) 5%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(48% 60% at 50% 34%, #000 0%, transparent 74%);
+  -webkit-mask-image: radial-gradient(48% 60% at 50% 34%, #000 0%, transparent 74%);
+}
+
+body.vcai-workspace--landing.vcai-ambient .ai-bot-conversations::after {
+  top: -6rem;
+  left: 50%;
+  width: 74rem;
+  height: 44rem;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(38% 42% at 50% 46%, var(--vcai-ember) 0%, transparent 66%),
+    radial-gradient(50% 50% at 50% 50%, color-mix(in srgb, var(--vcai-accent) 15%, transparent) 0%, transparent 72%);
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__content-wrapper {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 54rem);
+  max-width: 54rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  box-sizing: border-box;
+  justify-content: center;
+  transform: none;
+}
+
+@keyframes vcai-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes vcai-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.025); }
+}
+
+@keyframes vcai-halo {
+  0%, 100% { opacity: 0.55; transform: translateX(-50%) scale(1); }
+  50% { opacity: 0.88; transform: translateX(-50%) scale(1.09); }
+}
+
+@keyframes vcai-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes vcai-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ==========================================================================
+   Status chip
+   ========================================================================== */
+
+.vcai-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  align-self: center;
+  margin: 0 auto 1.75rem;
+  padding: 0.375rem 0.75rem 0.375rem 0.875rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-border) 90%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vcai-surface) 72%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 2px rgba(34, 23, 58, 0.04);
+  animation: vcai-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vcai-status-chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 20%, transparent);
+  animation: vcai-pulse 2.4s ease-in-out infinite;
+}
+
+.vcai-status-chip__label {
+  font-family: var(--vcai-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vcai-text-muted);
+}
+
+.vcai-status-chip__rule {
+  width: 1px;
+  height: 14px;
+  background: var(--vcai-border);
+}
+
+.vcai-status-chip__agent {
+  font-family: var(--vcai-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vcai-accent-strong);
+}
+
+.vcai-status-chip:empty,
+.vcai-status-chip__agent:empty {
+  display: none;
+}
+
+/* ==========================================================================
+   Greeting mark + headline
+   ========================================================================== */
+
+.vcai-greeting-mark {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1.125rem;
+  animation: vcai-rise 0.6s 0.06s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vcai-greeting-mark::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15rem;
+  height: 9rem;
+  translate: 0 -50%;
+  border-radius: 50%;
+  background: radial-gradient(46% 52% at 50% 52%, var(--vcai-ember), transparent 70%);
+  animation: vcai-halo 4.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.vcai-greeting-mark__image {
+  position: relative;
+  display: block;
+  width: auto;
+  height: clamp(58px, 6vw, 76px);
+  max-width: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(224, 113, 43, 0.22));
+  animation: vcai-breathe 5.2s ease-in-out infinite;
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__title {
+  margin: 0;
+  font-family: var(--vcai-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.032em;
+  line-height: 1.05;
+  text-align: center;
+  text-wrap: balance;
+  color: color-mix(in srgb, var(--vcai-text) 94%, #000);
+  animation: vcai-rise 0.6s 0.06s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vcai-subtitle {
+  max-width: 52ch;
+  margin: 1rem auto 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  text-align: center;
+  text-wrap: pretty;
+  color: color-mix(in srgb, var(--vcai-text-muted) 86%, var(--vcai-text));
+  animation: vcai-rise 0.6s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================================================
+   Composer
+   ========================================================================== */
+
+body.vcai-workspace--landing .ai-bot-conversations__input-container {
+  width: min(100%, var(--vcai-composer-width));
+  max-width: var(--vcai-composer-width);
+  margin: 2.375rem auto 0;
+  animation: vcai-rise 0.6s 0.14s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__input-wrapper {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-template-areas:
+    "field field field field"
+    "upload agent . submit";
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 0;
+  padding: 1.25rem 0.875rem 0.875rem;
+  overflow: hidden;
+  border: 1px solid var(--vcai-border);
+  border-radius: var(--vcai-radius-xl);
+  background: var(--vcai-surface);
+  box-shadow: var(--vcai-shadow-sm), 0 16px 44px rgba(34, 23, 58, 0.09);
+  box-sizing: border-box;
+  transition: border-color 180ms ease, box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__input-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--vcai-accent), transparent);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  pointer-events: none;
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__input-wrapper:focus-within {
+  border-color: var(--vcai-accent);
+  box-shadow: var(--vcai-focus), var(--vcai-shadow-lg);
+}
+
+body.vcai-workspace--landing .ai-bot-conversations__input-wrapper:focus-within::before {
+  opacity: 1;
+  animation: vcai-sweep 2.6s linear infinite;
+}
+
+body.vcai-workspace--landing #ai-bot-conversations-input {
+  grid-area: field;
+  width: 100%;
+  min-height: 5.25rem;
+  padding: 0 0.75rem 0.5rem;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--vcai-text);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
+
+body.vcai-workspace--landing #ai-bot-conversations-input::placeholder {
+  color: var(--vcai-text-muted);
+}
+
+body.vcai-workspace--landing .ai-bot-upload-btn,
+body.vcai-workspace--landing .ai-conversation-submit {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.vcai-workspace--landing .ai-bot-upload-btn {
+  grid-area: upload;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--vcai-border) 65%, var(--vcai-surface));
+  border-radius: var(--vcai-radius-md);
+  background: var(--vcai-surface);
+  color: var(--vcai-text-muted);
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+body.vcai-workspace--landing .ai-bot-upload-btn:hover,
+body.vcai-workspace--landing .ai-bot-upload-btn:focus-visible {
+  border-color: color-mix(in srgb, var(--vcai-accent) 30%, var(--vcai-border));
+  background: color-mix(in srgb, var(--vcai-accent-soft) 55%, var(--vcai-surface));
+  color: var(--vcai-accent-strong);
+  outline: none;
+}
+
+body.vcai-workspace--landing .ai-conversation-submit {
+  grid-area: submit;
+  gap: 0.5rem;
+  height: 2.375rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: var(--vcai-radius-md);
+  background: linear-gradient(140deg, color-mix(in srgb, var(--vcai-accent) 82%, #fff), var(--vcai-accent-strong));
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--vcai-accent-strong) 30%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 140ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+
+body.vcai-workspace--landing .ai-conversation-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--vcai-accent-strong) 38%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+body.vcai-workspace--landing .ai-conversation-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+body.vcai-workspace--landing .ai-conversation-submit:disabled,
+body.vcai-workspace--landing .ai-conversation-submit[disabled] {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--vcai-accent) 82%, #fff), var(--vcai-accent-strong));
+  color: #fff;
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+body.vcai-workspace--landing .ai-conversation-submit .d-icon,
+body.vcai-workspace--landing .ai-conversation-submit svg,
+body.vcai-workspace--landing .ai-conversation-submit use {
+  color: #fff;
+  fill: #fff;
+}
+
+.vcai-submit-label {
+  white-space: nowrap;
+}
+
+.vcai-submit-hint {
+  font-family: var(--vcai-mono);
+  font-size: 0.6875rem;
+  opacity: 0.72;
+}
+
+/* Agent selector — docked into the composer footer */
+
+body.vcai-workspace--landing.vcai-agent-docked .ai-bot-conversations__input-wrapper .agent-llm-selector {
+  grid-area: agent;
+  align-self: center;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+
+body.vcai-workspace--landing.vcai-agent-docked .agent-llm-selector label {
+  display: none;
+}
+
+body.vcai-workspace--landing:not(.vcai-agent-docked) .ai-bot-conversations .agent-llm-selector {
+  align-self: center;
+  width: min(100%, var(--vcai-composer-width));
+  margin: 0.85rem auto 0;
+  padding-inline: 0.25rem;
+  box-sizing: border-box;
+}
+
+body.vcai-workspace--landing .agent-llm-selector__selection-wrapper {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+body.vcai-workspace--landing .agent-llm-selector label {
+  margin: 0;
+  color: var(--vcai-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.vcai-workspace--landing .agent-llm-selector .select-kit-header {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-border) 65%, var(--vcai-surface));
+  border-radius: var(--vcai-radius-md);
+  background: var(--vcai-surface);
+  color: var(--vcai-accent-strong);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+body.vcai-workspace--landing .agent-llm-selector .select-kit-header:hover,
+body.vcai-workspace--landing .agent-llm-selector .select-kit-header:focus-visible {
+  border-color: color-mix(in srgb, var(--vcai-accent) 30%, var(--vcai-border));
+  background: color-mix(in srgb, var(--vcai-accent-soft) 45%, var(--vcai-surface));
+  outline: none;
+}
+
+body.vcai-workspace--landing .agent-llm-selector .select-kit-header .name {
+  color: color-mix(in srgb, var(--vcai-text) 88%, var(--vcai-accent-strong));
+}
+
+/* ==========================================================================
+   Starters
+   ========================================================================== */
+
+.vcai-starters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  width: min(100%, 36.25rem);
+  margin: 1.125rem auto 0;
+  order: 2;
+  animation: vcai-rise 0.6s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vcai-starter {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem 0.5rem 0.6875rem;
+  border: 1px solid var(--vcai-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vcai-surface) 86%, transparent);
+  backdrop-filter: blur(6px);
+  color: color-mix(in srgb, var(--vcai-text-muted) 70%, var(--vcai-text));
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease,
+    transform 160ms ease, box-shadow 160ms ease;
+}
+
+.vcai-starter::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border-radius: 5px;
+  background: linear-gradient(140deg, color-mix(in srgb, var(--vcai-accent) 68%, #fff), var(--vcai-accent-strong));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.vcai-starter:nth-child(2)::before { background: linear-gradient(140deg, #8fb6ee, #4e74b8); }
+.vcai-starter:nth-child(3)::before { background: linear-gradient(140deg, #f0a98f, #c2540b); }
+.vcai-starter:nth-child(4)::before { background: linear-gradient(140deg, #8fd9b6, #2f8f65); }
+.vcai-starter:nth-child(5)::before { background: linear-gradient(140deg, #efa8c4, #b8437a); }
+.vcai-starter:nth-child(6)::before { background: linear-gradient(140deg, #d6c48f, #a8860b); }
+
+.vcai-starter:hover,
+.vcai-starter:focus-visible {
+  border-color: color-mix(in srgb, var(--vcai-accent) 45%, var(--vcai-border));
+  background: var(--vcai-surface);
+  color: var(--vcai-text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 23, 58, 0.08);
+  outline: none;
+}
+
+.vcai-starter:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   Disclaimer
+   ========================================================================== */
+
+body.vcai-workspace--landing .ai-disclaimer {
+  order: 3;
+  max-width: 60ch;
+  margin: 1.25rem auto 0;
+  color: color-mix(in srgb, var(--vcai-text-muted) 78%, var(--vcai-surface));
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+  animation: vcai-rise 0.6s 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================================================
+   Active AI conversation
+   ========================================================================== */
+
+body.vcai-workspace--thread #main-outlet {
+  width: min(100%, 960px);
+  margin-inline: auto;
+}
+
+body.vcai-workspace--thread #topic-title {
+  width: min(100%, 800px);
+  margin: 0.75rem auto 1rem;
+}
+
+body.vcai-workspace--thread #topic-title h1 {
+  color: var(--vcai-text);
+  font-family: var(--vcai-display);
+  font-size: clamp(1.55rem, 2.2vw, 2rem);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+body.vcai-workspace--thread .container.posts,
+body.vcai-workspace--thread .topic-area,
+body.vcai-workspace--thread .post-stream {
+  width: min(100%, 800px);
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+body.vcai-workspace--thread .topic-post {
+  width: 100%;
+  border-top: 0;
+}
+
+body.vcai-workspace--thread .topic-post article.boxed {
+  margin-bottom: 0.75rem;
+  padding: 1rem 1.1rem 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--vcai-border) 82%, transparent);
+  border-radius: var(--vcai-radius-lg);
+  background: var(--vcai-surface);
+  box-shadow: 0 10px 30px rgba(34, 23, 58, 0.045);
+}
+
+body.vcai-workspace--thread .topic-post.topic-owner article.boxed {
+  border-color: color-mix(in srgb, var(--vcai-accent) 18%, var(--vcai-border));
+  background: linear-gradient(110deg, var(--vcai-accent-soft), var(--vcai-surface) 72%);
+}
+
+body.vcai-workspace--thread .topic-post .topic-avatar,
+body.vcai-workspace--thread .topic-post .topic-body {
+  border-top: 0;
+}
+
+body.vcai-workspace--thread .topic-post .cooked {
+  max-width: none;
+  color: var(--vcai-text);
+  font-size: 1rem;
+  line-height: 1.66;
+}
+
+body.vcai-workspace--thread .topic-post .cooked h2,
+body.vcai-workspace--thread .topic-post .cooked h3 {
+  margin-top: 1.4em;
+  color: var(--vcai-text);
+  letter-spacing: -0.02em;
+}
+
+body.vcai-workspace--thread .topic-post .cooked blockquote,
+body.vcai-workspace--thread .topic-post .cooked aside.quote {
+  border-left: 3px solid var(--vcai-accent);
+  border-radius: 0 var(--vcai-radius-sm) var(--vcai-radius-sm) 0;
+  background: color-mix(in srgb, var(--vcai-accent-soft) 62%, var(--vcai-surface));
+}
+
+body.vcai-workspace--thread .topic-post .post-controls {
+  margin-top: 0.7rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid color-mix(in srgb, var(--vcai-border) 70%, transparent);
+}
+
+body.vcai-workspace--thread .topic-navigation.with-timeline {
+  opacity: 0.58;
+  transition: opacity 150ms ease;
+}
+
+body.vcai-workspace--thread .topic-navigation.with-timeline:hover,
+body.vcai-workspace--thread .topic-navigation.with-timeline:focus-within {
+  opacity: 1;
+}
+
+/* Docked composer */
+
+body.vcai-workspace--thread .docked-composer.ai-bot-docked-composer {
+  z-index: 20;
+  width: min(100%, 800px);
+  margin-inline: auto;
+  padding: 0.75rem 0 0.65rem;
+  background: linear-gradient(180deg, transparent, var(--vcai-surface) 22%);
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .d-editor-textarea-wrapper {
+  overflow: hidden;
+  border: 1px solid var(--vcai-border);
+  border-radius: var(--vcai-radius-lg);
+  background: var(--vcai-surface);
+  box-shadow: var(--vcai-shadow-md);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .d-editor-textarea-wrapper:focus-within {
+  border-color: var(--vcai-accent);
+  box-shadow: var(--vcai-focus), var(--vcai-shadow-md);
+}
+
+/* Core stacks the toolbar toggle (top-right) and the send button
+   (bottom-right) inside the textarea wrapper at 8px insets. With a 5.5rem
+   textarea and two 2.5rem circles they overlapped by 6px; 6rem gives the
+   2rem toggle + 2.5rem send button an 8px gap. */
+body.vcai-workspace--thread .ai-bot-docked-composer .d-editor-input {
+  min-height: 6rem;
+  padding: 0.9rem 3.5rem 0.9rem 1rem;
+  color: var(--vcai-text);
+  line-height: 1.55;
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .d-editor-button-bar {
+  padding: 0.25rem 0.55rem;
+  border-top: 1px solid var(--vcai-border);
+  background: var(--vcai-surface-soft);
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .d-editor-button-bar .btn {
+  border-radius: var(--vcai-radius-sm);
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer__toolbar-toggle,
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  transition: background 140ms ease, color 140ms ease, transform 120ms ease;
+}
+
+/* Secondary control: smaller than the send button, and the 8px top inset
+   keeps it clear of the send button's 8px bottom inset (see min-height above). */
+body.vcai-workspace--thread .ai-bot-docked-composer__toolbar-toggle {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Core paints both docked-composer buttons with `background: transparent
+   !important` (and the send icon with `color: var(--tertiary) !important`),
+   so the fills below must be !important too — this is a cascade the theme
+   cannot win on specificity. Without it the send icon was white on nothing. */
+body.vcai-workspace--thread .ai-bot-docked-composer__toolbar-toggle {
+  background: var(--vcai-accent-soft) !important;
+  color: var(--vcai-accent-strong);
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer__toolbar-toggle:hover,
+body.vcai-workspace--thread .ai-bot-docked-composer__toolbar-toggle:focus-visible {
+  background: color-mix(in srgb, var(--vcai-accent) 18%, var(--vcai-surface)) !important;
+  outline: none;
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--vcai-accent) 82%, #fff), var(--vcai-accent-strong)) !important;
+  color: #fff;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--vcai-accent) 26%, transparent);
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn:hover:not(:disabled),
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn:focus-visible {
+  background: var(--vcai-accent-strong) !important;
+  outline: none;
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* Disabled state (empty composer): core clears the button background for
+   disabled buttons, which left a white paper-plane on a white circle — the
+   "blank Ask button" on mobile. Keep the accent fill, dim the whole control. */
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn:disabled,
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn[disabled] {
+  background: linear-gradient(140deg, color-mix(in srgb, var(--vcai-accent) 82%, #fff), var(--vcai-accent-strong)) !important;
+  color: #fff;
+  box-shadow: none;
+  opacity: 0.48;
+  cursor: default;
+}
+
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn .d-icon,
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn svg,
+body.vcai-workspace--thread .ai-bot-docked-composer .docked-composer__submit-btn use {
+  color: #fff !important;
+  fill: #fff !important;
+}
+
+body.vcai-workspace--thread .ai-bot-scroll-indicator {
+  border-color: color-mix(in srgb, var(--vcai-accent) 32%, var(--vcai-border));
+  background: var(--vcai-surface);
+  color: var(--vcai-accent-strong);
+  box-shadow: var(--vcai-shadow-sm);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  body.vcai-workspace--landing .ai-bot-conversations {
+    min-height: calc(100dvh - 110px);
+  }
+
+  body.vcai-workspace--thread #main-outlet,
+  body.vcai-workspace--thread #topic-title,
+  body.vcai-workspace--thread .container.posts,
+  body.vcai-workspace--thread .topic-area,
+  body.vcai-workspace--thread .post-stream,
+  body.vcai-workspace--thread .docked-composer.ai-bot-docked-composer {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.vcai-workspace--thread .topic-navigation.with-timeline {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  body.vcai-workspace--landing .ai-bot-conversations__content-wrapper {
+    padding-inline: 1rem;
+  }
+
+  body.vcai-workspace--landing .ai-bot-conversations__title {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+  }
+
+  body.vcai-workspace--landing .ai-bot-conversations__input-wrapper {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "field field field"
+      "upload agent submit";
+    padding: 1rem 0.75rem 0.75rem;
+  }
+
+  body.vcai-workspace--landing .agent-llm-selector .select-kit-header {
+    max-width: 9.5rem;
+  }
+
+  body.vcai-workspace--landing .agent-llm-selector .select-kit-header .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vcai-starters {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .vcai-starters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .vcai-starter {
+    flex: 0 0 auto;
+  }
+
+  .vcai-status-chip {
+    margin-bottom: 1.25rem;
+  }
+
+  body.vcai-workspace--thread .topic-post article.boxed {
+    margin-inline: 0.5rem;
+    padding-inline: 0.75rem;
+    border-radius: var(--vcai-radius-md);
+  }
+
+  body.vcai-workspace--thread .docked-composer.ai-bot-docked-composer {
+    padding: 0.5rem max(0.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.vcai-workspace *,
+  body.vcai-workspace *::before,
+  body.vcai-workspace *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Landing stacking order (starters sit below the composer)
+   ========================================================================== */
+
+body.vcai-workspace--landing .vcai-status-chip { order: 0; }
+body.vcai-workspace--landing .vcai-greeting-mark { order: 1; }
+body.vcai-workspace--landing .ai-bot-conversations__title { order: 2; }
+body.vcai-workspace--landing .vcai-subtitle { order: 3; }
+body.vcai-workspace--landing .ai-bot-conversations__input-container { order: 4; }
+body.vcai-workspace--landing .vcai-starters { order: 5; }
+body.vcai-workspace--landing:not(.vcai-agent-docked) .ai-bot-conversations .agent-llm-selector { order: 6; }
+body.vcai-workspace--landing .ai-disclaimer { order: 7; }

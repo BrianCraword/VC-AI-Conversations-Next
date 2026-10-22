@@ -1,0 +1,12 @@
+/* VC AI Conversations Next 1.0.3
+   One component for the Discourse AI Conversations surface on VC. Each module
+   has its own stylesheet and its own enable switch; a disabled module ships no
+   DOM and no body class, so its stylesheet is inert. */
+
+@import "workspace";
+@import "history";
+@import "memory";
+@import "header-controls";
+@import "response-status";
+
+@import "conversation-navigation";

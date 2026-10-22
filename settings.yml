@@ -196,3 +196,14 @@ vcai_response_status_hide_streaming_trailing_dot:
   type: bool
   default: false
   client: true
+
+vcai_navigation_enabled:
+  type: bool
+  default: false
+  description: "Opt-in conversation navigation candidate. Review on phones before enabling."
+
+vcai_navigation_excluded_bot_ids:
+  type: list
+  list_type: compact
+  default: "-1237"
+  description: "Bot user IDs whose private topics must not show general AI navigation. Includes VC's restricted interview bot; keep in sync with the interview configuration."
