@@ -408,3 +408,29 @@ body.vcai-memory--open .vcai-memory-backdrop {
     transition-duration: 0.01ms;
   }
 }
+
+// Keep dismissal inside the panel even when it covers the toolbar on phones.
+.vcai-memory-panel .vcai-memory-panel__header {
+  padding-inline: 1rem;
+  gap: .5rem;
+  .vcai-memory-panel__title-wrap { flex: 1 1 auto; }
+  .vcai-memory-switch { flex-shrink: 0; }
+}
+.vcai-memory-panel__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--vcai-memory-border);
+  border-radius: 10px;
+  color: var(--vcai-memory-text);
+  background: var(--vcai-memory-surface);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  &:hover { background: var(--vcai-memory-surface-soft); }
+  &:focus-visible { outline: 2px solid var(--tertiary); outline-offset: 2px; }
+}
