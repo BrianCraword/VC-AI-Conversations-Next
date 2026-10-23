@@ -75,7 +75,7 @@
     .vcai-nav-new { order: 1; }
     .vcai-nav-history { order: 2; }
     .vcai-nav-explore, &__menu { order: 3; }
-    .vcai-nav-history > span, .vcai-nav-explore > span, > details > summary > span { display: none; }
+    .vcai-nav-memory > span, .vcai-nav-history > span, .vcai-nav-explore > span, > details > summary > span { display: none; }
     &__context { padding-inline: 6px; }
   }
 }
@@ -87,6 +87,37 @@ body.vcai-history .ai-conversations-panel:has(#vcai-history-filter) #vc-sidebar-
 @container vcai-actions (max-width: 540px) {
   .vcai-nav-wide { display: none !important; }
   .vcai-nav-short { display: inline !important; }
-  .vcai-nav-history > span, .vcai-nav-explore > span,
+  .vcai-nav-memory > span, .vcai-nav-history > span, .vcai-nav-explore > span,
   .vcai-conversation-navigation__menu > summary > span { display: none; }
+}
+// Contextual controls take over only while the admitted toolbar is mounted.
+body.vcai-navigation-ready {
+  &.ai-bot-conversations-page .ai-new-question-button__wrapper,
+  &:has(.vcai-nav-new) .ai-new-question-button__wrapper { display: none; }
+  &:has(.vcai-nav-memory) .vcai-header-control--memory,
+  &:has(.vcai-nav-memory) #vcai-memory-toggle,
+  &:has(.vcai-nav-history) .vcai-header-control--history,
+  &:has(.vcai-nav-history) #vcai-history-toggle { display: none !important; }
+}
+.vcai-conversation-navigation {
+  .vcai-nav-memory { order: 2; }
+  .vcai-nav-action[aria-expanded="true"] {
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+  }
+  .vcai-nav-explore, &__menu {
+    order: 4;
+    margin-inline-start: 4px;
+    border-inline-start: 1px solid var(--primary-low);
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+}
+@media (max-width: 639px) {
+  .vcai-conversation-navigation .vcai-nav-memory { order: 3; }
+  .vcai-conversation-navigation .vcai-nav-explore,
+  .vcai-conversation-navigation__menu { order: 4; }
+}
+@container vcai-actions (max-width: 340px) {
+  .vcai-conversation-navigation__context .vcai-nav-short { display: none !important; }
 }
