@@ -1,3 +1,8 @@
+## 1.2.1 — 2026-10-22
+
+- Repair the flattened 1.2.0 upload: navigation code is now in javascripts/discourse, styles in stylesheets, and strings in locales/en.yml.
+- Restore the navigation stylesheet import. Settings and admission/draft policies are unchanged.
+
 # Changelog
 
 ## 1.0.1 — 2026-10-11

@@ -1,3 +1,7 @@
+## 1.2.1 installation repair
+
+Restores the AI navigation initializer, component, policy, stylesheet and translations to the directories Discourse imports. Update this existing component from GitHub after the repair is merged. Keep vcai_navigation_enabled enabled and reload the page. Do not upload individual flattened files; preserve the repository folder structure.
+
 # VC AI Conversations Next
 
 Theme component for the AI conversation pages on victoriouschristians.com:
