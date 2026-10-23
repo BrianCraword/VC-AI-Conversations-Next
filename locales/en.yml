@@ -100,6 +100,9 @@ en:
     close_memories: "Close AI Memories"
 
   vcai_navigation:
+    workspace: "AI Conversations"
+    back: "Back"
+    new_short: "New"
     conversations: "Conversations"
     new_conversation: "New conversation"
     site_menu: "Explore"
