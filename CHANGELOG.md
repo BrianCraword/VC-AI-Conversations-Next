@@ -1,3 +1,9 @@
+## 1.3.0 — 2026-10-23
+
+- Compact AI action bar using Canvas-compatible colors, rounded corners, icons, and a primary new-conversation action.
+- Short mobile labels and 44px controls; omit duplicate desktop Explore when global shared Explore is available.
+- Conditionally hide the empty legacy history filter while its replacement is mounted.
+
 ## 1.2.1 — 2026-10-22
 
 - Repair the flattened 1.2.0 upload: navigation code is now in javascripts/discourse, styles in stylesheets, and strings in locales/en.yml.

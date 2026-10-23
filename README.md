@@ -1,3 +1,7 @@
+## 1.3.0 compact AI action bar
+
+Desktop groups the return/context label, History and primary New conversation action. Explore remains in shared global navigation; fallback Explore remains when that integration is unavailable. Mobile uses Back, New, and labeled History/Explore icons with 44px targets. Existing navigation enable setting, admission and draft protection remain unchanged. An empty legacy sidebar filter is hidden only while the current history filter is mounted; entered legacy filter text keeps it visible.
+
 ## 1.2.1 installation repair
 
 Restores the AI navigation initializer, component, policy, stylesheet and translations to the directories Discourse imports. Update this existing component from GitHub after the repair is merged. Keep vcai_navigation_enabled enabled and reload the page. Do not upload individual flattened files; preserve the repository folder structure.

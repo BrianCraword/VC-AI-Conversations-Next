@@ -7,7 +7,7 @@ import { registerDestructor } from "@ember/destroyable";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { routeState, onRouteState } from "../lib/vcai-route-state";
 import { eligibleNavigation, hasDraftContent } from "../lib/vcai-navigation-policy";
@@ -63,6 +63,9 @@ export default class VcaiConversationNavigation extends Component {
   get conversationsLabel() { return i18n(themePrefix("vcai_navigation.conversations")); }
   get newLabel() { return i18n(themePrefix("vcai_navigation.new_conversation")); }
   get menuLabel() { return i18n(themePrefix("vcai_navigation.site_menu")); }
+  get shortNewLabel() { return i18n(themePrefix("vcai_navigation.new_short")); }
+  get backLabel() { return i18n(themePrefix("vcai_navigation.back")); }
+  get workspaceLabel() { return i18n(themePrefix("vcai_navigation.workspace")); }
   get feedLabel() { return i18n(themePrefix("vcai_navigation.feed")); }
   canLeave() {
     // Do not clear, serialize or discard draft text. Finish/save it in the native composer first.
@@ -118,18 +121,18 @@ export default class VcaiConversationNavigation extends Component {
   }
   <template>
     {{#if this.visible}}
-      <nav class="vcai-conversation-navigation" aria-label={{this.conversationsLabel}} {{on "keydown" this.keydown}} {{didInsert this.ready}} {{willDestroy this.unready}}>
+      <nav class="vcai-conversation-navigation {{if this.sharedExplore 'vcai-conversation-navigation--shared'}}" aria-label={{this.conversationsLabel}} {{on "keydown" this.keydown}} {{didInsert this.ready}} {{willDestroy this.unready}}>
         {{#if this.state.landing}}
-          <span class="vcai-conversation-navigation__context">{{this.conversationsLabel}}</span>
+          <span class="vcai-conversation-navigation__context">{{icon "comments"}}<span class="vcai-nav-wide">{{this.workspaceLabel}}</span><span class="vcai-nav-short">AI</span></span>
         {{else}}
-          <DButton @translatedLabel={{this.conversationsLabel}} @action={{this.conversations}} @disabled={{this.busy}} />
+          <button type="button" class="vcai-nav-action vcai-nav-back" aria-label={{this.conversationsLabel}} title={{this.conversationsLabel}} disabled={{this.busy}} {{on "click" this.conversations}}>{{icon "arrow-left"}}<span class="vcai-nav-wide">{{this.conversationsLabel}}</span><span class="vcai-nav-short">{{this.backLabel}}</span></button>
         {{/if}}
-        <DButton @translatedLabel={{this.newLabel}} @action={{this.newConversation}} @disabled={{this.busy}} />
+        <button type="button" class="vcai-nav-action vcai-nav-new" aria-label={{this.newLabel}} title={{this.newLabel}} disabled={{this.busy}} {{on "click" this.newConversation}}>{{icon "plus"}}<span class="vcai-nav-wide">{{this.newLabel}}</span><span class="vcai-nav-short">{{this.shortNewLabel}}</span></button>
         {{#if this.sharedExplore}}
-          <DButton @translatedLabel={{this.menuLabel}} @action={{this.explore}} />
+          <button type="button" class="vcai-nav-action vcai-nav-explore" aria-label={{this.menuLabel}} title={{this.menuLabel}} {{on "click" this.explore}}>{{icon "compass"}}<span>{{this.menuLabel}}</span></button>
         {{else}}
         <details class="vcai-conversation-navigation__menu" {{on "toggle" this.menuToggle}}>
-          <summary>{{this.menuLabel}}</summary>
+          <summary aria-label={{this.menuLabel}} title={{this.menuLabel}}>{{icon "compass"}}<span>{{this.menuLabel}}</span></summary>
           <div class="vcai-conversation-navigation__links">
             <a href="/feed" {{on "click" this.visit}}>{{this.feedLabel}}</a>
             {{#each this.rows as |group|}}
@@ -148,7 +151,7 @@ export default class VcaiConversationNavigation extends Component {
         </details>
         {{/if}}
         {{#if this.historyAvailable}}
-          <DButton @translatedLabel={{this.historyLabel}} @action={{this.history}} />
+          <button type="button" class="vcai-nav-action vcai-nav-history" aria-label={{this.historyLabel}} title={{this.historyLabel}} {{on "click" this.history}}>{{icon "clock-rotate-left"}}<span>{{this.historyLabel}}</span></button>
         {{/if}}
       </nav>
     {{/if}}
