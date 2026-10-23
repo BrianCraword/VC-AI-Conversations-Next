@@ -1,0 +1,18 @@
+import { readFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import test from "node:test";
+const source=await readFile(new URL("../javascripts/discourse/lib/vcai-navigation-policy.js",import.meta.url),"utf8");
+const {eligibleNavigation,hasDraftContent}=await import("data:text/javascript;base64,"+Buffer.from(source).toString("base64"));
+const user={ai_enabled_chat_bots:[{id:-1201},{id:-1237}]};
+const topic={id:42,archetype:"private_message",details:{allowed_users:[{id:-1201}]}};
+const base={user,topic,path:"/t/example/42",state:{thread:true},excludedIds:"-1237"};
+test("ordinary AI topic",()=>assert.equal(eligibleNavigation(base),true));
+test("guest excluded",()=>assert.equal(eligibleNavigation({...base,user:null}),false));
+test("stale topic excluded",()=>assert.equal(eligibleNavigation({...base,path:"/t/other/43"}),false));
+test("interview excluded even with ordinary AI bot",()=>assert.equal(eligibleNavigation({...base,topic:{...topic,details:{allowed_users:[{id:-1201},{id:-1237}]}}}),false));
+test("ordinary PM excluded",()=>assert.equal(eligibleNavigation({...base,topic:{...topic,details:{allowed_users:[{id:1}]}}}),false));
+test("ordinary topic excluded",()=>assert.equal(eligibleNavigation({...base,topic:{...topic,archetype:"regular"}}),false));
+test("missing data fails closed",()=>assert.equal(eligibleNavigation({...base,topic:null}),false));
+test("landing with query",()=>assert.equal(eligibleNavigation({...base,path:"/discourse-ai/ai-bot/conversations?agent=omega",state:{landing:true}}),true));
+test("draft text blocks",()=>assert.equal(hasDraftContent({querySelectorAll:()=>[{value:"draft"}],querySelector:()=>null}),true));
+test("attachment blocks",()=>assert.equal(hasDraftContent({querySelectorAll:()=>[],querySelector:()=>({})}),true));
