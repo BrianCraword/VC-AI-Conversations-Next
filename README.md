@@ -1,3 +1,7 @@
+## 1.4.1 — Memories close button
+
+Adds a labeled44px close button inside the fixed Memories header, reachable on full-width mobile panels. Uses the existing close path and returns focus to a visible Memories trigger. Memory data and permissions unchanged.
+
 ## 1.4.0 — Contextual AI actions
 
 Remove New from the start page and redundant Back from threads. History follows the panel owner and is omitted when pinned open. Memories moves into the toolbar with expanded-state feedback. Duplicate header/sidebar actions stand down only while replacements are mounted. See CONTEXTUAL-ACTIONS.md for the approved behavior and validation limits.

@@ -380,7 +380,21 @@ export default apiInitializer((api) => {
       refresh();
     });
 
-    header.append(titleWrap, managementLabel);
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "vcai-memory-panel__close";
+    close.setAttribute("aria-label", t("close_panel"));
+    close.setAttribute("title", t("close_panel"));
+    const closeGlyph = document.createElement("span");
+    closeGlyph.setAttribute("aria-hidden", "true");
+    closeGlyph.textContent = "\u00d7";
+    close.append(closeGlyph);
+    close.addEventListener("click", () => {
+      setOpen(false);
+      const triggers = document.querySelectorAll(".vcai-nav-memory, .vcai-header-control--memory button, #vcai-memory-toggle");
+      [...triggers].find((button) => button.getClientRects().length > 0)?.focus();
+    });
+    header.append(titleWrap, managementLabel, close);
     panel.append(header, content);
     return panel;
   }
