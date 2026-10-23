@@ -1,3 +1,7 @@
+## 1.4.0 — Contextual AI actions
+
+Remove New from the start page and redundant Back from threads. History follows the panel owner and is omitted when pinned open. Memories moves into the toolbar with expanded-state feedback. Duplicate header/sidebar actions stand down only while replacements are mounted. See CONTEXTUAL-ACTIONS.md for the approved behavior and validation limits.
+
 ## 1.3.0 — 2026-10-23
 
 - Compact AI action bar using Canvas-compatible colors, rounded corners, icons, and a primary new-conversation action.

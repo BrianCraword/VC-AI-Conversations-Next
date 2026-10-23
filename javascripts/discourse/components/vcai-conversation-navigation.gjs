@@ -10,6 +10,7 @@ import { on } from "@ember/modifier";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { routeState, onRouteState } from "../lib/vcai-route-state";
+import { panelActions } from "../lib/vcai-panel-actions";
 import { eligibleNavigation, hasDraftContent } from "../lib/vcai-navigation-policy";
 
 const HOME = "/discourse-ai/ai-bot/conversations";
@@ -25,14 +26,15 @@ export default class VcaiConversationNavigation extends Component {
   @tracked path = "";
   @tracked busy = false;
   @tracked historyAvailable = false;
+  @tracked historyOpen = false;
+  @tracked memoryAvailable = false;
+  @tracked memoryOpen = false;
 
   constructor() {
     super(...arguments);
     this.sync();
-    this.historyObserver = new MutationObserver(() => {
-      this.historyAvailable = document.body.classList.contains("vcai-history");
-    });
-    this.historyAvailable = document.body.classList.contains("vcai-history");
+    this.historyObserver = new MutationObserver(() => this.syncPanels());
+    this.syncPanels();
     this.historyObserver.observe(document.body, {attributes:true, attributeFilter:["class"]});
     const unsubscribe = onRouteState(() => this.sync());
     this.changed = () => this.sync();
@@ -55,6 +57,17 @@ export default class VcaiConversationNavigation extends Component {
     document.dispatchEvent(new CustomEvent("je-nav:destinations:request", {detail}));
     this.sharedExplore = detail.sharedExplore === true;
   }
+  syncPanels() {
+    const panels = panelActions(document.body.classList);
+    this.historyAvailable = panels.historyAvailable;
+    this.historyOpen = panels.historyOpen;
+    this.memoryAvailable = panels.memoryAvailable;
+    this.memoryOpen = panels.memoryOpen;
+  }
+  get memoryLabel() { return i18n(themePrefix("vcai_header.memories")); }
+  get memoryTitle() { return i18n(themePrefix(this.memoryOpen ? "vcai_header.close_memories" : "vcai_header.open_memories")); }
+  get historyTitle() { return i18n(themePrefix(this.historyOpen ? "vcai_header.close_history" : "vcai_header.open_history")); }
+  @action memory() { window.dispatchEvent(new CustomEvent("vcai:memory:toggle")); }
   get visible() {
     return eligibleNavigation({user: this.currentUser, state: this.state, path: this.path,
       topic: getOwner(this).lookup("controller:topic")?.model,
@@ -122,12 +135,10 @@ export default class VcaiConversationNavigation extends Component {
   <template>
     {{#if this.visible}}
       <nav class="vcai-conversation-navigation {{if this.sharedExplore 'vcai-conversation-navigation--shared'}}" aria-label={{this.conversationsLabel}} {{on "keydown" this.keydown}} {{didInsert this.ready}} {{willDestroy this.unready}}>
-        {{#if this.state.landing}}
-          <span class="vcai-conversation-navigation__context">{{icon "comments"}}<span class="vcai-nav-wide">{{this.workspaceLabel}}</span><span class="vcai-nav-short">AI</span></span>
-        {{else}}
-          <button type="button" class="vcai-nav-action vcai-nav-back" aria-label={{this.conversationsLabel}} title={{this.conversationsLabel}} disabled={{this.busy}} {{on "click" this.conversations}}>{{icon "arrow-left"}}<span class="vcai-nav-wide">{{this.conversationsLabel}}</span><span class="vcai-nav-short">{{this.backLabel}}</span></button>
-        {{/if}}
-        <button type="button" class="vcai-nav-action vcai-nav-new" aria-label={{this.newLabel}} title={{this.newLabel}} disabled={{this.busy}} {{on "click" this.newConversation}}>{{icon "plus"}}<span class="vcai-nav-wide">{{this.newLabel}}</span><span class="vcai-nav-short">{{this.shortNewLabel}}</span></button>
+        <span class="vcai-conversation-navigation__context">{{icon "comments"}}<span class="vcai-nav-wide">{{this.workspaceLabel}}</span><span class="vcai-nav-short">AI</span></span>
+        {{#unless this.state.landing}}
+          <button type="button" class="vcai-nav-action vcai-nav-new" aria-label={{this.newLabel}} title={{this.newLabel}} disabled={{this.busy}} {{on "click" this.newConversation}}>{{icon "plus"}}<span class="vcai-nav-wide">{{this.newLabel}}</span><span class="vcai-nav-short">{{this.shortNewLabel}}</span></button>
+        {{/unless}}
         {{#if this.sharedExplore}}
           <button type="button" class="vcai-nav-action vcai-nav-explore" aria-label={{this.menuLabel}} title={{this.menuLabel}} {{on "click" this.explore}}>{{icon "compass"}}<span>{{this.menuLabel}}</span></button>
         {{else}}
@@ -151,7 +162,10 @@ export default class VcaiConversationNavigation extends Component {
         </details>
         {{/if}}
         {{#if this.historyAvailable}}
-          <button type="button" class="vcai-nav-action vcai-nav-history" aria-label={{this.historyLabel}} title={{this.historyLabel}} {{on "click" this.history}}>{{icon "clock-rotate-left"}}<span>{{this.historyLabel}}</span></button>
+          <button type="button" class="vcai-nav-action vcai-nav-history" aria-label={{this.historyLabel}} title={{this.historyTitle}} aria-expanded={{if this.historyOpen "true" "false"}} {{on "click" this.history}}>{{icon "clock-rotate-left"}}<span>{{this.historyLabel}}</span></button>
+        {{/if}}
+        {{#if this.memoryAvailable}}
+          <button type="button" class="vcai-nav-action vcai-nav-memory" aria-label={{this.memoryLabel}} title={{this.memoryTitle}} aria-expanded={{if this.memoryOpen "true" "false"}} aria-controls="vcai-memory-panel" {{on "click" this.memory}}>{{icon "brain"}}<span>{{this.memoryLabel}}</span></button>
         {{/if}}
       </nav>
     {{/if}}
