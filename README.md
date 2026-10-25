@@ -1,3 +1,9 @@
+## 1.4.2 — Navigation clarity
+
+Validation and rollout: [clarity notes](docs/CLARITY-1.4.2.md).
+
+Keeps History, Memories and Explore visibly labeled on mobile and constrained desktop toolbars. Mobile uses two columns; New remains thread-only. Actions, draft guards, Memories close and bottom-bar suppression are unchanged.
+
 ## 1.4.1 — Memories close button
 
 Adds a labeled44px close button inside the fixed Memories header, reachable on full-width mobile panels. Uses the existing close path and returns focus to a visible Memories trigger. Memory data and permissions unchanged.

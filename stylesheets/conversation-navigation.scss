@@ -4,6 +4,7 @@
   top: var(--header-offset, 4rem);
   z-index: 490;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   min-width: 0;
@@ -75,7 +76,7 @@
     .vcai-nav-new { order: 1; }
     .vcai-nav-history { order: 2; }
     .vcai-nav-explore, &__menu { order: 3; }
-    .vcai-nav-memory > span, .vcai-nav-history > span, .vcai-nav-explore > span, > details > summary > span { display: none; }
+
     &__context { padding-inline: 6px; }
   }
 }
@@ -87,8 +88,9 @@ body.vcai-history .ai-conversations-panel:has(#vcai-history-filter) #vc-sidebar-
 @container vcai-actions (max-width: 540px) {
   .vcai-nav-wide { display: none !important; }
   .vcai-nav-short { display: inline !important; }
-  .vcai-nav-memory > span, .vcai-nav-history > span, .vcai-nav-explore > span,
-  .vcai-conversation-navigation__menu > summary > span { display: none; }
+  .vcai-conversation-navigation__context { flex-basis: 100%; }
+  .vcai-nav-action, .vcai-conversation-navigation__menu { flex: 1 1 110px; }
+  .vcai-nav-action, .vcai-conversation-navigation__menu > summary { white-space: normal; overflow-wrap: anywhere; }
 }
 // Contextual controls take over only while the admitted toolbar is mounted.
 body.vcai-navigation-ready {
@@ -118,6 +120,26 @@ body.vcai-navigation-ready {
   .vcai-conversation-navigation .vcai-nav-explore,
   .vcai-conversation-navigation__menu { order: 4; }
 }
-@container vcai-actions (max-width: 340px) {
-  .vcai-conversation-navigation__context .vcai-nav-short { display: none !important; }
+// A predictable two-column layout keeps every action named on small screens.
+// The start page has History / Memories, then the shared Explore entry.
+@media (max-width: 639px) {
+  .vcai-conversation-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    &__context { display: none; }
+    .vcai-nav-action, > details > summary {
+      width: 100%;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      padding-block: 6px;
+    }
+    .vcai-nav-explore, &__menu {
+      margin-inline-start: 0;
+      border-inline-start: 0;
+      border-radius: 9px;
+    }
+    &:not(:has(.vcai-nav-new)) .vcai-nav-explore,
+    &:not(:has(.vcai-nav-new)) > details { grid-column: 1 / -1; }
+  }
 }
