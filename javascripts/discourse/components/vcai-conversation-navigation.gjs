@@ -108,8 +108,8 @@ export default class VcaiConversationNavigation extends Component {
     document.dispatchEvent(request);
     if (!request.defaultPrevented) { this.sharedExplore = false; }
   }
-  @action ready() { document.body.classList.add("vcai-navigation-ready"); }
-  @action unready() { document.body.classList.remove("vcai-navigation-ready"); }
+  @action ready() { document.body.classList.add("vcai-navigation-ready", "vcai-mobile-nav-v1"); }
+  @action unready() { document.body.classList.remove("vcai-navigation-ready", "vcai-mobile-nav-v1"); }
   @action conversations() { return this.navigate(HOME); }
   @action newConversation() { return this.navigate(HOME, true); }
   @action visit(event) {

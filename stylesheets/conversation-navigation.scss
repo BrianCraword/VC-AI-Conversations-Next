@@ -143,3 +143,29 @@ body.vcai-navigation-ready {
     &:not(:has(.vcai-nav-new)) > details { grid-column: 1 / -1; }
   }
 }
+
+// Header Navigation acknowledges the v1 mobile layout contract only when its
+// shared bar and Explore owner are mounted. Older/disabled components keep fallback.
+@media (max-width: 639px) {
+  body.je-ai-bottom-navigation {
+    .vcai-conversation-navigation {
+      display: flex;
+      flex-wrap: nowrap;
+      margin-block: 6px 8px;
+      .vcai-nav-action { flex: 1 1 auto; width: auto; gap: 4px; padding-inline: 4px; white-space: nowrap; overflow-wrap: normal; }
+      .vcai-nav-explore, > details { display: none; }
+    }
+    // Native keyboard mode sets an inline top and bottom:auto. Leave it alone.
+    .docked-composer.ai-bot-docked-composer:not(.docked-composer--keyboard-open) {
+      box-sizing: border-box;
+      bottom: var(--je-ai-bottom-inset, 0px);
+      padding-bottom: .5rem;
+    }
+    &.has-ai-bot-docked-composer .with-topic-progress {
+      bottom: calc(var(--ai-docked-composer-height, 0px) + var(--je-ai-bottom-inset, 0px));
+    }
+  }
+  html:has(body.je-ai-bottom-navigation) {
+    scroll-padding-bottom: calc(var(--ai-docked-composer-height, 0px) + var(--je-ai-bottom-inset, 0px));
+  }
+}

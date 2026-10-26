@@ -38,3 +38,9 @@ the response-status indicator. Each module has its own on/off setting.
 - **Never re-set a body class that is already right.** Several modules watch
   `<body class>`. `classList.add`/`remove` rewrite the attribute even when
   nothing changes, which wakes every watcher; use `classList.toggle(name, force)`.
+
+## 1.5.0 — shared mobile AI navigation (2026-10-25)
+
+Paired Header Navigation 5.7 / AI Conversations Next 1.5 supports stable five-tab navigation on admitted mobile AI pages and a compact labeled toolbar. Opt in with `je_nav_ai_bottom_navigation_enabled` in shared_explore layout; default off pending physical-phone keyboard acceptance. Header measures the bar including safe area; AI offsets its native composer without changing native keyboard positioning. Missing or disabled integration retains the prior toolbar and suppression. Desktop, native menus, redirects, permissions and draft guards remain unchanged. No production deployment.
+
+See [AI-BOTTOM-NAV.md](AI-BOTTOM-NAV.md) for verification, phone acceptance and rollback.
