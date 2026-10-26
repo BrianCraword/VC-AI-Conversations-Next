@@ -44,3 +44,9 @@ the response-status indicator. Each module has its own on/off setting.
 Paired Header Navigation 5.7 / AI Conversations Next 1.5 supports stable five-tab navigation on admitted mobile AI pages and a compact labeled toolbar. Opt in with `je_nav_ai_bottom_navigation_enabled` in shared_explore layout; default off pending physical-phone keyboard acceptance. Header measures the bar including safe area; AI offsets its native composer without changing native keyboard positioning. Missing or disabled integration retains the prior toolbar and suppression. Desktop, native menus, redirects, permissions and draft guards remain unchanged. No production deployment.
 
 See [AI-BOTTOM-NAV.md](AI-BOTTOM-NAV.md) for verification, phone acceptance and rollback.
+
+## 1.5.1 - Mobile viewport balance (2026-10-26)
+
+Docks mobile contextual actions directly below the header with 44px targets. The start page uses remaining dynamic viewport space rather than an extra viewport-sized welcome section. Tighter responsive spacing and artwork keep the composer prominent; short screens, enlarged text and uploads retain natural scrolling. Desktop and native keyboard/composer behavior remain unchanged.
+
+See [MOBILE-VIEWPORT.md](MOBILE-VIEWPORT.md) for measured results, rollback and remaining physical-device checks.
