@@ -1,0 +1,68 @@
+// Appearance only. The scene is painted relative to the existing logo, so
+// personalized greetings and different viewport heights cannot detach the sun.
+body.vcai-workspace--landing {
+  .ai-bot-conversations__title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: -.035em;
+    text-shadow: 0 1px 14px var(--secondary);
+  }
+  .vcai-subtitle { text-shadow: 0 1px 10px var(--secondary); }
+  .vcai-starter::before { display: none; }
+  .vcai-starter-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex: 0 0 auto;
+    fill: currentColor;
+    color: var(--vcai-accent-strong);
+  }
+  .vcai-starter:nth-child(2) .vcai-starter-icon,
+  .vcai-starter:nth-child(5) .vcai-starter-icon { color: var(--success); }
+  .vcai-starter {
+    font-weight: 500;
+    box-shadow: 0 3px 12px rgba(52, 38, 21, .06);
+  }
+  .ai-disclaimer { color: var(--vcai-text-muted); }
+}
+
+body.vcai-workspace--landing.vcai-ambient {
+  // Discourse's secondary color follows the selected palette, including dark.
+  .ai-bot-conversations::before,
+  .ai-bot-conversations::after { display: none; }
+  .ai-bot-conversations__content-wrapper { isolation: isolate; }
+  .vcai-greeting-mark {
+    width: 100%;
+    animation: none;
+  }
+  .vcai-greeting-mark__image { animation: none; }
+  .vcai-greeting-mark::before {
+    --scene-height: clamp(260px, 70vw, 540px);
+    content: "";
+    z-index: -1;
+    top: calc(50% + var(--scene-height) * .18);
+    left: 50%;
+    width: 100%;
+    height: var(--scene-height);
+    translate: none;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    animation: none;
+    // The supplied image's sun is at approximately 52% x / 32% y.
+    // Background position anchors the sun at 32% of this box. The 18% top
+    // offset keeps that point centered on the logo at every content width.
+    --scene-veil: light-dark(
+      color-mix(in srgb, var(--secondary) 38%, transparent),
+      color-mix(in srgb, var(--secondary) 68%, transparent));
+    background-image:
+      linear-gradient(var(--scene-veil), var(--scene-veil)),
+      url($vcai_sunrise);
+    background-size: 100% 100%, 100% auto;
+    background-position: center, 52% 32%;
+    background-repeat: no-repeat;
+    mask-image:
+      linear-gradient(transparent, #000 25%, #000 40%, transparent 85%),
+      linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-composite: intersect;
+    pointer-events: none;
+  }
+}

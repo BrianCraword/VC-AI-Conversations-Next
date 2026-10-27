@@ -1,3 +1,7 @@
+## 1.6.0 — Sunrise landing appearance
+
+Adds the supplied mountain sunrise behind the existing greeting logo, a serif landing headline and meaningful decorative starter icons. Agent identities, prompts, logo URL, navigation and conversation behavior are unchanged. Scene respects the existing ambient-field switch and palette. See [design validation](SUNRISE-LANDING.md).
+
 ## 1.4.2 â€” Navigation clarity
 
 Validation and rollout: [clarity notes](docs/CLARITY-1.4.2.md).

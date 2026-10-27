@@ -327,7 +327,24 @@ export default apiInitializer((api) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "vcai-starter";
-      button.textContent = label;
+      // Known labels get meaningful decorative icons; customized labels keep a
+      // neutral compass. Labels, prompts and click behavior remain configured.
+      const icons = {
+        "Open a passage": "book-open",
+        "Trace a doctrine": "seedling",
+        "Test a teaching": "scale-balanced",
+        "Explore context": "magnifying-glass",
+        "Apply the text": "leaf",
+        "Surprise me": "lightbulb",
+      };
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.classList.add("d-icon", "vcai-starter-icon");
+      icon.setAttribute("aria-hidden", "true");
+      icon.setAttribute("focusable", "false");
+      const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+      use.setAttribute("href", `#${Object.hasOwn(icons, label) ? icons[label] : "compass"}`);
+      icon.appendChild(use);
+      button.append(icon, document.createTextNode(label));
       button.addEventListener("click", () => {
         // Resolved at click time: Discourse may re-render the composer after
         // this region is built, which would leave a captured node stale.

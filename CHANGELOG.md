@@ -1,3 +1,7 @@
+## 1.6.0 — Sunrise landing appearance
+
+Adds the supplied mountain sunrise behind the existing greeting logo, a serif landing headline and meaningful decorative starter icons. Agent identities, prompts, logo URL, navigation and conversation behavior are unchanged. Scene respects the existing ambient-field switch and palette. See [design validation](SUNRISE-LANDING.md).
+
 ## 1.4.2 â€” Navigation clarity
 
 Keeps History, Memories and Explore visibly labeled on mobile and constrained desktop toolbars. Mobile uses two columns; New remains thread-only. Actions, draft guards, Memories close and bottom-bar suppression are unchanged.

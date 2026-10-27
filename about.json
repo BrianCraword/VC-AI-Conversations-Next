@@ -4,10 +4,12 @@
   "license_url": null,
   "about_url": null,
   "authors": null,
-  "theme_version": "1.5.1",
+  "theme_version": "1.6.0",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
-  "assets": {},
+  "assets": {
+    "vcai_sunrise": "assets/mountain-sunrise.webp"
+  },
   "color_schemes": {},
   "modifiers": {
     "svg_icons": [
@@ -16,7 +18,13 @@
       "comments",
       "arrow-left",
       "plus",
-      "compass"
+      "compass",
+      "book-open",
+      "seedling",
+      "scale-balanced",
+      "magnifying-glass",
+      "leaf",
+      "lightbulb"
     ]
   },
   "learn_more": "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
