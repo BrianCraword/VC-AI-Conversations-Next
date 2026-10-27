@@ -1,0 +1,40 @@
+// Native agent menus must be able to escape the card. A hidden overflow
+// container scrolls when the dropdown focuses its search field, blanking the card.
+body.vcai-workspace--landing {
+  .ai-bot-conversations__input-wrapper { overflow: visible; }
+  .ai-bot-conversations__input-wrapper::before { inset-inline: 12px; width: auto; }
+  .ai-bot-conversations:has(.agent-llm-selector .is-expanded) { z-index: 491; }
+  .agent-llm-selector .select-kit-collection {
+    max-height: min(250px, 35dvh);
+  }
+  .agent-llm-selector,
+  .agent-llm-selector__selection-wrapper,
+  .agent-llm-selector .select-kit { min-width: 0; }
+  .agent-llm-selector { flex-wrap: wrap; }
+  .agent-llm-selector__selection-wrapper { max-width: 100%; }
+  .agent-llm-selector .select-kit-header { max-width: 100%; }
+  .agent-llm-selector .name { overflow: hidden; text-overflow: ellipsis; }
+  .vcai-draft-length {
+    margin: 0;
+    padding-inline: .5rem;
+    color: var(--vcai-text-muted);
+    font-size: .8125rem;
+    line-height: 1.4;
+    text-align: start;
+  }
+  .vcai-draft-length[hidden] { display: none; }
+  .vcai-draft-length.is-over { color: var(--danger); }
+  #ai-bot-conversations-input[aria-invalid="true"] { outline: 2px solid var(--danger); outline-offset: 2px; }
+}
+
+@media (max-width: 639px) {
+  body.vcai-workspace--landing {
+    .ai-bot-conversations__input-wrapper {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: "field field field" "upload agent submit";
+    }
+    .vcai-submit-hint { display: none; }
+    .ai-conversation-submit { flex-shrink: 0; padding-inline: .75rem; white-space: nowrap; }
+    #ai-bot-conversations-input { max-height: 30dvh; }
+  }
+}

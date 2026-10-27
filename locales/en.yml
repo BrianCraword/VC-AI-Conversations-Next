@@ -108,3 +108,8 @@ en:
     site_menu: "Explore"
     feed: "Feed"
     draft_notice: "You have an unfinished message or upload. Finish or save it in the composer before leaving this conversation."
+
+  vcai_composer:
+    near_limit: "Draft: %{count} / %{limit} characters. Attachments also count when sending."
+    over_limit: "Draft: %{count} / %{limit} characters. Shorten it before sending; your text is kept."
+    send_too_long: "This message contains %{count} characters including attachments. The limit is %{limit}. Shorten it or split it into messages. Your draft and attachments have been kept."

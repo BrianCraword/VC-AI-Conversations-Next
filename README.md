@@ -1,3 +1,7 @@
+## 1.6.1 - Composer reliability
+
+Restores the native mobile agent picker, adds configured-limit draft feedback and attachment-aware send validation, and improves mobile action spacing. See [validation and rollback](docs/COMPOSER-1.6.1.md).
+
 ## 1.6.0 — Sunrise landing appearance
 
 Adds the supplied mountain sunrise behind the existing greeting logo, a serif landing headline and meaningful decorative starter icons. Agent identities, prompts, logo URL, navigation and conversation behavior are unchanged. Scene respects the existing ambient-field switch and palette. See [design validation](SUNRISE-LANDING.md).

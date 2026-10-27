@@ -1,0 +1,12 @@
+import { readFile } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import test from 'node:test';
+const source=await readFile(new URL('../javascripts/discourse/lib/vcai-draft-length.js',import.meta.url),'utf8');
+const {draftPayload,draftLengthState}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+test('exact limit accepted; one over rejected',()=>{assert.equal(draftLengthState('x'.repeat(32000),32000).over,false);assert.equal(draftLengthState('x'.repeat(32001),32000).over,true)});
+test('Unicode counts codepoints like server, not UTF16 units',()=>{assert.equal(draftLengthState('😀é文',3).count,3);assert.equal(draftLengthState('😀é文',3).over,false)});
+test('warning begins at ninety percent of configured limit',()=>{assert.equal(draftLengthState('x'.repeat(89),100).near,false);assert.equal(draftLengthState('x'.repeat(90),100).near,true)});
+test('native upload separators included exactly',()=>{assert.equal(draftPayload('text',['![one](upload://a)','[two](upload://b)']),'text\n\n![one](upload://a)\n[two](upload://b)\n')});
+test('attachment-only excess is caught',()=>{assert.equal(draftLengthState(draftPayload('12345',['123']),10).over,true)});
+test('no upload does not add separators',()=>assert.equal(draftPayload('text',[]),'text'));
+test('invalid or missing limit does not block input',()=>{for(const max of [undefined,0,-1,'oops'])assert.equal(draftLengthState('text',max).over,false)});
