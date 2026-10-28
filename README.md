@@ -1,3 +1,7 @@
+## 1.6.2 - Mobile agent selection sheet
+
+Mobile agent/model choice now opens an opaque modal sheet with search, scrolling choices and explicit Close. Native choices and selection callbacks remain in use. Desktop dropdown stacking is corrected. See [validation and phone checks](docs/SELECTOR-SHEET-1.6.2.md).
+
 ## 1.6.1 - Composer reliability
 
 Restores the native mobile agent picker, adds configured-limit draft feedback and attachment-aware send validation, and improves mobile action spacing. See [validation and rollback](docs/COMPOSER-1.6.1.md).
