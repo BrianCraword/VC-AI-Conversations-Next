@@ -1,3 +1,5 @@
+> WITHDRAWN 2026-10-28: Brian reported a production outage after updating1.6.2; disabling component306 restored access. Local publication acceptance below did not establish production compatibility. See ROLLBACK-1.6.3.md.
+
 # Mobile selector sheet 1.6.2
 
 ## Problem and scope

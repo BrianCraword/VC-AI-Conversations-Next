@@ -1,6 +1,6 @@
-## 1.6.2 - Mobile agent selection sheet
+## 1.6.3 - Withdraw mobile selector sheet
 
-Mobile agent/model choice now opens an opaque modal sheet with search, scrolling choices and explicit Close. Native choices and selection callbacks remain in use. Desktop dropdown stacking is corrected. See [validation and phone checks](docs/SELECTOR-SHEET-1.6.2.md).
+Emergency rollback of 1.6.2 after an owner-reported production outage. Product code is restored to 1.6.1. The phone picker issue remains unresolved. Component 306 should stay disabled until Brian chooses to validate this recovery build. See [incident notes](docs/ROLLBACK-1.6.3.md).
 
 ## 1.6.1 - Composer reliability
 
