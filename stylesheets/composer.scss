@@ -38,3 +38,33 @@ body.vcai-workspace--landing {
     #ai-bot-conversations-input { max-height: 30dvh; }
   }
 }
+
+body.vcai-workspace--landing .ai-bot-conversations__input-container:has(.select-kit.is-expanded) { position: relative; z-index: 30; }
+body.vcai-native-picker-open { overflow: hidden; }
+dialog.vcai-native-picker-dialog {
+  box-sizing: border-box; position: fixed; inset-inline: 0; bottom: auto;
+  width: calc(100% - 16px); max-width: 36rem;
+  max-height: calc(var(--vcai-picker-height, 100dvh) - 24px);
+  margin: 12px auto; padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+  border: 1px solid var(--primary-low); border-radius: 18px;
+  background: var(--secondary); color: var(--primary); overflow: hidden;
+  &[open] { display: flex; flex-direction: column; gap: 12px; }
+  &::backdrop { background: rgb(0 0 0 / 45%); }
+  .select-kit { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; width: 100%; overflow: visible; }
+  .select-kit-header { flex-shrink: 0; min-height: 44px; max-width: 100%; }
+  .select-kit-body {
+    position: static !important; inset: auto !important; transform: none !important;
+    width: 100% !important; min-width: 0 !important; max-width: 100% !important;
+    max-height: max(80px, calc(var(--vcai-picker-height, 100dvh) - 170px)) !important; visibility: visible !important; pointer-events: auto !important;
+    background: var(--secondary); box-shadow: none; overflow-y: auto !important; flex: 1 1 auto;
+    min-height: 0; overscroll-behavior: contain;
+  }
+  .select-kit-collection { max-height: none !important; }
+  .select-kit-row { min-height: 48px; white-space: normal; overflow-wrap: anywhere; }
+  .select-kit-filter input { font-size: 16px; min-height: 44px; }
+}
+.vcai-native-picker-heading {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0;
+  h2 { margin: 0; font-size: 1.15rem; }
+  button { min-height: 44px; min-width: 60px; }
+}

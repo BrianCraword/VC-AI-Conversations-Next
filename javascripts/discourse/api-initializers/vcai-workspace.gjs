@@ -433,6 +433,8 @@ export default apiInitializer((api) => {
           continue;
         }
         if (
+          // A native picker returns here after choosing inside the modal.
+          (node.matches?.("details.select-kit") && mutation.target.closest?.(".agent-llm-selector")) ||
           node.matches?.(".ai-bot-conversations, .ai-bot-conversations__title") ||
           node.querySelector?.(".ai-bot-conversations__title") ||
           node.matches?.(".agent-llm-selector, .ai-bot-conversations__input-wrapper") ||

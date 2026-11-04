@@ -1,3 +1,7 @@
+## 1.6.4 - Native mobile picker dialog
+
+Replaces the withdrawn global dropdown patch with an interaction-only native picker dialog. Agent/model choices and drafts remain native. Brian confirmed 1.6.3 restored the live site; the precise 1.6.2 outage cause remains unproven. See [validation, phone test and rollback](docs/NATIVE-PICKER-1.6.4.md).
+
 ## 1.6.3 - Withdraw mobile selector sheet
 
 Emergency rollback of 1.6.2 after an owner-reported production outage. Product code is restored to 1.6.1. The phone picker issue remains unresolved. Component 306 should stay disabled until Brian chooses to validate this recovery build. See [incident notes](docs/ROLLBACK-1.6.3.md).
