@@ -100,6 +100,10 @@ en:
     close_memories: "Close AI Memories"
 
   vcai_navigation:
+    leave_title: "Leave this draft?"
+    leave_message: "Your message has not been sent. Discarding will clear this draft and remove its attachments."
+    discard_leave: "Discard and leave"
+    keep_editing: "Keep editing"
     workspace: "AI Conversations"
     back: "Back"
     new_short: "New"

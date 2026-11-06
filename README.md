@@ -1,3 +1,7 @@
+## 1.6.5 - Draft departure choices
+
+Adds Keep editing and Discard and leave for the AI start-page shared navigation. Update both AI and header components. See [validation and scope](docs/DRAFT-DEPARTURE-1.6.5.md).
+
 ## 1.6.4 - Native mobile picker dialog
 
 Replaces the withdrawn global dropdown patch with an interaction-only native picker dialog. Agent/model choices and drafts remain native. Brian confirmed 1.6.3 restored the live site; the precise 1.6.2 outage cause remains unproven. See [validation, phone test and rollback](docs/NATIVE-PICKER-1.6.4.md).

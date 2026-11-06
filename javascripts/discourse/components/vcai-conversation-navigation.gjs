@@ -39,7 +39,16 @@ export default class VcaiConversationNavigation extends Component {
     const unsubscribe = onRouteState(() => this.sync());
     this.changed = () => this.sync();
     this.router.on("routeDidChange", this.changed);
-    this.beforeNavigate = event => { if (this.visible && !this.canLeave()) { event.preventDefault(); } };
+    this.beforeNavigate = event => {
+      if (!this.visible) { return; }
+      if (event.detail?.version === 2) {
+        event.preventDefault();
+        event.detail.confirmation = this.canLeave();
+      } else if (this.draftState().hasDraft) {
+        event.preventDefault();
+        this.dialog.alert(i18n(themePrefix("vcai_navigation.draft_notice")));
+      }
+    };
     document.addEventListener("je-nav:before-navigate", this.beforeNavigate);
     registerDestructor(this, () => {
       unsubscribe();
@@ -80,23 +89,58 @@ export default class VcaiConversationNavigation extends Component {
   get backLabel() { return i18n(themePrefix("vcai_navigation.back")); }
   get workspaceLabel() { return i18n(themePrefix("vcai_navigation.workspace")); }
   get feedLabel() { return i18n(themePrefix("vcai_navigation.feed")); }
-  canLeave() {
-    // Do not clear, serialize or discard draft text. Finish/save it in the native composer first.
-    const composer = getOwner(this).lookup("service:composer");
-    if (hasDraftContent(document) || String(composer?.model?.reply || "").trim()) {
-      this.dialog.alert(i18n(themePrefix("vcai_navigation.draft_notice")));
+  draftState() {
+    const owner = getOwner(this);
+    const composer = owner.lookup("service:composer");
+    const input = document.getElementById("ai-bot-conversations-input");
+    const hiddenSubmit = input && owner.lookup("service:ai-bot-conversations-hidden-submit");
+    const otherDraft = String(composer?.model?.reply || "").trim() ||
+      [...document.querySelectorAll(".docked-composer textarea, .d-editor-input, .docked-composer [contenteditable='true'], #reply-control [contenteditable='true']")]
+        .some(el => String(el.value ?? el.textContent ?? "").trim()) ||
+      document.querySelector(".docked-composer__upload, .docked-composer .upload-progress, #reply-control .upload-progress");
+    const hasDraft = otherDraft || hasDraftContent(document) ||
+      String(hiddenSubmit?.inputValue || "").trim() || document.querySelector(".ai-bot-upload");
+    return { input, hiddenSubmit, otherDraft, hasDraft };
+  }
+  async canLeave() {
+    if (this.leavePending) { return false; }
+    const { input, hiddenSubmit, otherDraft, hasDraft } = this.draftState();
+    if (!hasDraft) { return true; }
+    // Only the start-page draft has a verified discard contract here. Native
+    // topic drafts retain their existing protection rather than clearing storage.
+    if (!this.state.landing || !input || !hiddenSubmit || otherDraft) {
+      await this.dialog.alert(i18n(themePrefix("vcai_navigation.draft_notice")));
       return false;
     }
-    return true;
+    this.leavePending = true;
+    const path = this.router.currentURL;
+    try {
+      const discard = await this.dialog.confirm({
+        title: i18n(themePrefix("vcai_navigation.leave_title")),
+        message: i18n(themePrefix("vcai_navigation.leave_message")),
+        confirmButtonLabel: themePrefix("vcai_navigation.discard_leave"),
+        confirmButtonClass: "btn-danger",
+        cancelButtonLabel: themePrefix("vcai_navigation.keep_editing"),
+      });
+      if (this.isDestroying || this.isDestroyed || !input.isConnected || this.router.currentURL !== path) { return false; }
+      if (!discard) { input.focus({preventScroll: true}); return false; }
+      // Invoke native removal/cancel actions, then clear the native text service.
+      document.querySelectorAll(".ai-bot-upload__cancel, .ai-bot-upload__remove").forEach(button => button.click());
+      input.value = "";
+      input.dispatchEvent(new Event("input", {bubbles: true}));
+      hiddenSubmit.inputValue = "";
+      return true;
+    } finally { this.leavePending = false; }
   }
   async navigate(href, fresh = false) {
-    if (this.busy || !this.canLeave()) { return; }
+    if (this.busy) { return; }
     this.busy = true;
     try {
+      if (!(await this.canLeave())) { return; }
       if (fresh) { this.appEvents.trigger("discourse-ai:new-conversation-btn-clicked"); }
       if (this.path.split("?")[0] !== href) { await this.router.transitionTo(href); }
       if (href === HOME) { document.getElementById("ai-bot-conversations-input")?.focus(); }
-      } finally { if (!this.isDestroying && !this.isDestroyed) { this.busy = false; } }
+    } finally { if (!this.isDestroying && !this.isDestroyed) { this.busy = false; } }
   }
   get historyLabel() { return i18n(themePrefix("vcai_header.history")); }
   @action history() {
